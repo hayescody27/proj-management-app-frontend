@@ -1,0 +1,38 @@
+.tab {
+    width: 25vw;
+    display: flex;
+    height: 25vh;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    min-width: 320px;
+}
+
+.card {
+    display: flex; 
+    align-items: center; 
+    flex-direction: column;
+    margin-top: 15vh;
+}
+
+.wrapper {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: flex-start;
+    height: calc(100vh - 64px);
+}
+
+mat-form-field {
+    width: 80%;
+}
+
+
+@media only screen and (max-width: 768px) {
+    .tab {
+        width: 80vw;
+        height: 50vh;
+        flex-direction: column;
+        gap: 5px;
+    }
+  }
