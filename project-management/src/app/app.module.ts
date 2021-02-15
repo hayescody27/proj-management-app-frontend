@@ -16,11 +16,16 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatTableModule } from '@angular/material/table';
 import { LoginComponent } from './components/login/login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MyProjectsComponent } from './components/my-projects/my-projects.component';
 import { NewProjectComponent } from './components/new-project/new-project.component';
 import { ProjectTrackingComponent } from './components/project-tracking/project-tracking.component';
+import { ProjectOverviewComponent } from './components/project-overview/project-overview.component';
+import { PageTitleComponent } from './components/page-title/page-title.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +33,9 @@ import { ProjectTrackingComponent } from './components/project-tracking/project-
     LoginComponent,
     MyProjectsComponent,
     NewProjectComponent,
-    ProjectTrackingComponent
+    ProjectTrackingComponent,
+    ProjectOverviewComponent,
+    PageTitleComponent
   ],
   imports: [
     BrowserModule,
@@ -47,7 +54,10 @@ import { ProjectTrackingComponent } from './components/project-tracking/project-
     MatGridListModule,
     MatDividerModule,
     MatDatepickerModule,
-    MatTabsModule
+    MatTabsModule,
+    MatAutocompleteModule,
+    MatChipsModule,
+    MatTableModule
   ],
   providers: [],
   bootstrap: [AppComponent]

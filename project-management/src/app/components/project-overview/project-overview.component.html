@@ -1,0 +1,139 @@
+<page-title pageTitle='Project Overview'></page-title>
+
+<div
+    style="display: flex; flex-flow: row wrap; justify-content: center; gap: 20px; padding: 20px; max-height: calc(100vh - 64px);">
+    <div style="display: flex; flex-flow: column wrap;">
+        <mat-form-field appearance="outline">
+            <mat-label>Project Description</mat-label>
+            <textarea class="projectDescription" matInput
+                style="height: 7.5vh; min-height: 7.5vh; max-height: 25vh;"></textarea>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Project Manager</mat-label>
+            <input matInput>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Team Members</mat-label>
+            <mat-chip-list #membersList>
+                <mat-chip *ngFor="let member of project.members" (removed)="removeTeamMember(member)">
+                    {{member}}
+                    <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+                <input placeholder="Add team member..." #memberInput [formControl]="addMemberCtrl"
+                    [matAutocomplete]="auto" [matChipInputFor]="membersList"
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="addTeamMember($event)">
+            </mat-chip-list>
+            <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let mem of allMembers" [value]="mem">
+                    {{mem}}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+    </div>
+
+    <div>
+        <div class="outterTableContainer mat-elevation-z5">
+            <div class="innerTableContainer">
+                <table mat-table [dataSource]="project.risks" style="width: 100%;">
+
+                    <ng-container matColumnDef="tableTitle">
+                        <th mat-header-cell *matHeaderCellDef colspan="3"
+                            style="border-bottom: none; font-size: large; font-weight: bold;"> Project Risks </th>
+                    </ng-container>
+
+                    <!-- Edit Column -->
+                    <ng-container matColumnDef="editRisk">
+                        <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Edit </th>
+                        <td mat-cell *matCellDef="let row" style="text-align: center;">
+                            <button mat-icon-button (click)="editRisk(row)">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <!-- Description Column -->
+                    <ng-container matColumnDef="riskDescription">
+                        <th mat-header-cell *matHeaderCellDef> Description </th>
+                        <td mat-cell *matCellDef="let risk"> {{risk.riskDescription}} </td>
+                    </ng-container>
+
+                    <!-- Status Column -->
+                    <ng-container matColumnDef="riskStatus">
+                        <th mat-header-cell *matHeaderCellDef> Status </th>
+                        <td mat-cell *matCellDef="let risk"> {{risk.riskStatus}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="buttonRow">
+                        <td mat-cell *matFooterCellDef colspan="3" style="text-align: right;">
+                            <button mat-stroked-button (click)="addRisk()">
+                                <mat-icon>add</mat-icon> Add Risk
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="['tableTitle']; sticky: true"></tr>
+                    <tr mat-header-row *matHeaderRowDef="risksColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: risksColumns;"></tr>
+                    <tr mat-footer-row *matFooterRowDef="['buttonRow']; sticky: true"></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="outterTableContainer mat-elevation-z5">
+            <div class="innerTableContainer">
+                <table mat-table [dataSource]="project.requirements" style="width: 100%;">
+
+                    <ng-container matColumnDef="tableTitle">
+                        <th mat-header-cell *matHeaderCellDef colspan="4"
+                            style="border-bottom: none; font-size: large; font-weight: bold;"> Project Requirements
+                        </th>
+                    </ng-container>
+
+                    <!-- Edit Column -->
+                    <ng-container matColumnDef="editReq">
+                        <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Edit </th>
+                        <td mat-cell *matCellDef="let row" style="text-align: center;">
+                            <button mat-icon-button (click)="editRequirement(row)">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <!-- Description Column -->
+                    <ng-container matColumnDef="reqDescription">
+                        <th mat-header-cell *matHeaderCellDef> Description </th>
+                        <td mat-cell *matCellDef="let req"> {{req.reqDescription}} </td>
+                    </ng-container>
+
+                    <!-- Req Type Column -->
+                    <ng-container matColumnDef="reqType">
+                        <th mat-header-cell *matHeaderCellDef> Req Type </th>
+                        <td mat-cell *matCellDef="let req"> {{req.reqType}} </td>
+                    </ng-container>
+
+                    <!-- Status Column -->
+                    <ng-container matColumnDef="reqStatus">
+                        <th mat-header-cell *matHeaderCellDef> Status </th>
+                        <td mat-cell *matCellDef="let req"> {{req.reqStatus}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="buttonRow">
+                        <td mat-cell *matFooterCellDef colspan="4" style="text-align: right;">
+                            <button mat-stroked-button (click)="addRequirement()">
+                                <mat-icon>add</mat-icon> Add Requirement
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="['tableTitle']; sticky: true"></tr>
+                    <tr mat-header-row *matHeaderRowDef="requirementColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: requirementColumns;"></tr>
+                    <tr mat-footer-row *matFooterRowDef="['buttonRow']; sticky: true"></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
