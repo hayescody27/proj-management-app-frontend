@@ -5,8 +5,7 @@
     <div style="display: flex; flex-flow: column wrap;">
         <mat-form-field appearance="outline">
             <mat-label>Project Description</mat-label>
-            <textarea class="projectDescription" matInput
-                style="height: 7.5vh; min-height: 7.5vh; max-height: 25vh;"></textarea>
+            <textarea class="projectDescription" matInput></textarea>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
@@ -39,18 +38,8 @@
                 <table mat-table [dataSource]="project.risks" style="width: 100%;">
 
                     <ng-container matColumnDef="tableTitle">
-                        <th mat-header-cell *matHeaderCellDef colspan="3"
+                        <th mat-header-cell *matHeaderCellDef colspan="4"
                             style="border-bottom: none; font-size: large; font-weight: bold;"> Project Risks </th>
-                    </ng-container>
-
-                    <!-- Edit Column -->
-                    <ng-container matColumnDef="editRisk">
-                        <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Edit </th>
-                        <td mat-cell *matCellDef="let row" style="text-align: center;">
-                            <button mat-icon-button (click)="editRisk(row)">
-                                <mat-icon>edit</mat-icon>
-                            </button>
-                        </td>
                     </ng-container>
 
                     <!-- Description Column -->
@@ -65,8 +54,28 @@
                         <td mat-cell *matCellDef="let risk"> {{risk.riskStatus}} </td>
                     </ng-container>
 
+                    <!-- Edit Column -->
+                    <ng-container matColumnDef="editRisk">
+                        <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Edit </th>
+                        <td mat-cell *matCellDef="let row" style="text-align: center;">
+                            <button mat-icon-button (click)="editRisk(row)" color="primary">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <!-- Delete Column -->
+                    <ng-container matColumnDef="deleteRisk">
+                        <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Delete </th>
+                        <td mat-cell *matCellDef="let row" style="text-align: center;">
+                            <button mat-icon-button (click)="deleteRisk(row)" color="warn">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
                     <ng-container matColumnDef="buttonRow">
-                        <td mat-cell *matFooterCellDef colspan="3" style="text-align: right;">
+                        <td mat-footer-cell *matFooterCellDef colspan="4" style="text-align: right;">
                             <button mat-stroked-button (click)="addRisk()">
                                 <mat-icon>add</mat-icon> Add Risk
                             </button>
@@ -87,19 +96,9 @@
                 <table mat-table [dataSource]="project.requirements" style="width: 100%;">
 
                     <ng-container matColumnDef="tableTitle">
-                        <th mat-header-cell *matHeaderCellDef colspan="4"
+                        <th mat-header-cell *matHeaderCellDef colspan="5"
                             style="border-bottom: none; font-size: large; font-weight: bold;"> Project Requirements
                         </th>
-                    </ng-container>
-
-                    <!-- Edit Column -->
-                    <ng-container matColumnDef="editReq">
-                        <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Edit </th>
-                        <td mat-cell *matCellDef="let row" style="text-align: center;">
-                            <button mat-icon-button (click)="editRequirement(row)">
-                                <mat-icon>edit</mat-icon>
-                            </button>
-                        </td>
                     </ng-container>
 
                     <!-- Description Column -->
@@ -120,8 +119,28 @@
                         <td mat-cell *matCellDef="let req"> {{req.reqStatus}} </td>
                     </ng-container>
 
+                    <!-- Edit Column -->
+                    <ng-container matColumnDef="editReq">
+                        <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Edit </th>
+                        <td mat-cell *matCellDef="let row" style="text-align: center;">
+                            <button mat-icon-button (click)="editRequirement(row)" color="primary">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <!-- Delete Column -->
+                    <ng-container matColumnDef="deleteReq">
+                        <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Delete </th>
+                        <td mat-cell *matCellDef="let row" style="text-align: center;">
+                            <button mat-icon-button (click)="deleteRequirement(row)" color="warn">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        </td>
+                    </ng-container>
+
                     <ng-container matColumnDef="buttonRow">
-                        <td mat-cell *matFooterCellDef colspan="4" style="text-align: right;">
+                        <td mat-cell *matFooterCellDef colspan="5" style="text-align: right;">
                             <button mat-stroked-button (click)="addRequirement()">
                                 <mat-icon>add</mat-icon> Add Requirement
                             </button>

@@ -51,12 +51,8 @@ mat-label {
 }
 
 .mat-table-sticky {
-    border-top: 1px solid #e0e0e0;
-  }
-
-  .mat-table {
-    overflow-x: scroll;
-  }
+  border-top: 1px solid #e0e0e0;
+}
 
 .mat-cell,
 .mat-header-cell {
@@ -69,3 +65,14 @@ mat-label {
 .mat-header-row {
   display: table-row;
 }
+
+mat-form-field {
+  display: block;
+}
+
+textarea {
+  height: 7.5vh; 
+  min-height: 7.5vh; 
+  max-height: 25vh;
+}
+

@@ -7,26 +7,24 @@ import { environment } from './../../environments/environment';
 })
 export class UserService {
 
-  loggedIn$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  loggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor() {
     if (!environment.production) {
-      this.loggedIn$.next(true);
+      this.loggedIn.next(true);
     }
 
   }
 
   login(creds) {
-    console.log(creds);
-    this.loggedIn$.next(true);
+    this.loggedIn.next(true);
   }
 
   register(creds) {
-    console.log(creds);
-    this.loggedIn$.next(true);
+    this.loggedIn.next(true);
   }
 
   logout() {
-    this.loggedIn$.next(false);
+    this.loggedIn.next(false);
   }
 }

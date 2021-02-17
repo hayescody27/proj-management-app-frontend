@@ -1,5 +1,5 @@
 <mat-toolbar color="primary">
-  <div *ngIf="userSvc.loggedIn$ | async" style="width: 100%; display: flex;">
+  <div *ngIf="userSvc.loggedIn | async" style="width: 100%; display: flex;">
     <span>
       <button mat-button routerLink="/my-projects">
         <mat-icon>work</mat-icon> My Projects
@@ -24,3 +24,4 @@
   </div>
 </mat-toolbar>
 <router-outlet></router-outlet>
+<progress-overlay></progress-overlay>

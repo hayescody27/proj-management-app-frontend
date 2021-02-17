@@ -11,7 +11,7 @@ export class AppComponent {
   title = 'project-management';
 
   constructor(public userSvc: UserService, private router: Router) {
-    this.userSvc.loggedIn$.subscribe(l => {
+    this.userSvc.loggedIn.subscribe(l => {
       if (!l) {
         this.router.navigate(['/login']);
       } else {

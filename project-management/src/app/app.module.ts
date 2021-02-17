@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
@@ -19,13 +20,18 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTableModule } from '@angular/material/table';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LoginComponent } from './components/login/login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MyProjectsComponent } from './components/my-projects/my-projects.component';
 import { NewProjectComponent } from './components/new-project/new-project.component';
 import { ProjectTrackingComponent } from './components/project-tracking/project-tracking.component';
-import { ProjectOverviewComponent } from './components/project-overview/project-overview.component';
+import { AddRequirementModalComponent, AddRiskModalComponent, ConfirmModalComponent, EditRequirementModalComponent, EditRiskModalComponent, ProjectOverviewComponent } from './components/project-overview/project-overview.component';
 import { PageTitleComponent } from './components/page-title/page-title.component';
+import { ProgressOverlayComponent } from './components/progress-overlay/progress-overlay.component';
+import { ProgressService } from './services/progress-service.service';
+import { ProgressInterceptor } from './services/progress-interceptor.service';
 
 @NgModule({
   declarations: [
@@ -35,12 +41,20 @@ import { PageTitleComponent } from './components/page-title/page-title.component
     NewProjectComponent,
     ProjectTrackingComponent,
     ProjectOverviewComponent,
-    PageTitleComponent
+    AddRiskModalComponent,
+    EditRiskModalComponent,
+    ConfirmModalComponent,
+    AddRequirementModalComponent,
+    EditRequirementModalComponent,
+    PageTitleComponent,
+    ProgressOverlayComponent,
+
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
     MatToolbarModule,
@@ -57,9 +71,14 @@ import { PageTitleComponent } from './components/page-title/page-title.component
     MatTabsModule,
     MatAutocompleteModule,
     MatChipsModule,
-    MatTableModule
+    MatTableModule,
+    MatDialogModule,
+    MatProgressSpinnerModule
   ],
-  providers: [],
+  providers: [
+    ProgressService,
+    /* { provide: HTTP_INTERCEPTORS, useClass: ProgressInterceptor, multi: true } */
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
