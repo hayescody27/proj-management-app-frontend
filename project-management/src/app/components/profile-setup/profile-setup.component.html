@@ -1,0 +1,21 @@
+<div class="wrapper">
+    <mat-card class="card mat-elevation-z10">
+        <mat-card-title>
+            Profile Setup
+        </mat-card-title>
+        <mat-card-content>
+            <div class="tab">
+                <form [formGroup]="profileSetupForm" class="form" (ngSubmit)="updateProfile()">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Display Name</mat-label>
+                        <input type="text" matInput placeholder="Ex. John Doe" formControlName="displayName">
+                    </mat-form-field>
+                    <div>
+                        <button mat-stroked-button type="submit" [disabled]="!profileSetupForm.valid">Submit</button>
+                    </div>
+                    <mat-error *ngIf="errMsg">{{errMsg}}</mat-error>
+                </form>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>

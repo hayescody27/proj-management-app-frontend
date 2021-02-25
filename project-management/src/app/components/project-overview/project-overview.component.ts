@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
-import { RequirementStatus } from 'src/app/entities/requirement-status';
+import { RequirementStatusEnum } from 'src/app/entities/requirement-status-enum';
 import { KeyValue } from '@angular/common';
 
 @Component({
@@ -192,7 +192,7 @@ export class AddRequirementModalComponent {
     status: ['', Validators.required]
   })
 
-  reqStatuses = RequirementStatus;
+  reqStatuses = RequirementStatusEnum;
 
   constructor(private fb: FormBuilder) { }
 
@@ -217,7 +217,7 @@ export class EditRequirementModalComponent {
     status: [this.data.reqStatus, Validators.required]
   })
 
-  reqStatuses = RequirementStatus;
+  reqStatuses = RequirementStatusEnum;
 
   constructor(private fb: FormBuilder, @Inject(MAT_DIALOG_DATA) public data) { }
 

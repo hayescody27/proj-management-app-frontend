@@ -1,7 +1,7 @@
 .tab {
     width: 25vw;
     display: flex;
-    height: 50vh;
+    height: 25vh;
     text-align: center;
     justify-content: center;
     align-items: center;
@@ -21,6 +21,10 @@
     justify-content: center;
     align-items: flex-start;
     height: calc(100vh - 64px);
+}
+
+form {
+    width: 100%;
 }
 
 mat-form-field {

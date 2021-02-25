@@ -32,6 +32,8 @@ import { PageTitleComponent } from './components/page-title/page-title.component
 import { ProgressOverlayComponent } from './components/progress-overlay/progress-overlay.component';
 import { ProgressService } from './services/progress-service.service';
 import { ProgressInterceptor } from './services/progress-interceptor.service';
+import { BearerTokenInterceptor } from './services/bearer-token-interceptor.interceptor';
+import { ProfileSetupComponent } from './components/profile-setup/profile-setup.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +50,7 @@ import { ProgressInterceptor } from './services/progress-interceptor.service';
     EditRequirementModalComponent,
     PageTitleComponent,
     ProgressOverlayComponent,
+    ProfileSetupComponent,
 
   ],
   imports: [
@@ -78,6 +81,7 @@ import { ProgressInterceptor } from './services/progress-interceptor.service';
   providers: [
     ProgressService,
     /* { provide: HTTP_INTERCEPTORS, useClass: ProgressInterceptor, multi: true } */
+    { provide: HTTP_INTERCEPTORS, useClass: BearerTokenInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })

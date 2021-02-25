@@ -1,7 +1,4 @@
-export enum RequirementStatus {
-    'Requirements Analysis' = 'Requirements Analysis',
-    'Designing' = 'Designing',
-    'Coding' = 'Coding',
-    'Testing' = 'Testing',
-    'Project Management' = 'Project Management'
+export interface RequirementStatus {
+    status: string,
+    time: number
 }

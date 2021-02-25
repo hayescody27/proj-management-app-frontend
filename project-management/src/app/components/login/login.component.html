@@ -9,32 +9,59 @@
             <mat-tab-group mat-stretch-tabs>
                 <mat-tab label="Sign In">
                     <div class="tab">
-                        <form [formGroup]="emailSignIn" class="form" (ngSubmit)="userSvc.login(emailSignIn.value)">
-                            <mat-form-field>
-                                <input type="email" matInput placeholder="example@domain.com" formControlName="email">
+                        <form [formGroup]="emailSignIn" class="form" (ngSubmit)="login()">
+                            <mat-radio-group formControlName='signInOption' color='primary'>
+                                <mat-radio-button value="username">Username</mat-radio-button>
+                                <mat-radio-button value="email">Email</mat-radio-button>
+                            </mat-radio-group>
+                            <mat-form-field appearance="outline">
+                                <mat-label>Username</mat-label>
+                                <input type="text" matInput [placeholder]="emailSignIn.controls['signInOption'].value"
+                                    formControlName="uid">
                             </mat-form-field>
-                            <mat-form-field>
-                                <input type="password" matInput placeholder="Password" formControlName="password">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Password</mat-label>
+                                <input [type]="hide ? 'password' : 'text'" matInput placeholder="password"
+                                    formControlName="password">
+                                <button mat-icon-button matSuffix type="button" (click)="hide = !hide">
+                                    <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                </button>
                             </mat-form-field>
                             <div>
                                 <button mat-stroked-button type="submit" [disabled]="!emailSignIn.valid">Sign
                                     In</button>
                             </div>
+                            <mat-error *ngIf="signInErrMsg">{{signInErrMsg}}</mat-error>
                         </form>
                     </div>
                 </mat-tab>
                 <mat-tab label="Register">
                     <div class="tab">
-                        <form [formGroup]="emailSignUp" class="form" (ngSubmit)="userSvc.register(emailSignUp.value)">
-                            <mat-form-field>
+                        <form [formGroup]="emailSignUp" class="form" (ngSubmit)="register()">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Username</mat-label>
+                                <input type="text" matInput placeholder="username" formControlName="username">
+                            </mat-form-field>
+                            <mat-form-field appearance="outline">
+                                <mat-label>Email</mat-label>
                                 <input type="email" matInput placeholder="example@domain.com" formControlName="email">
                             </mat-form-field>
-                            <mat-form-field>
-                                <input type="password" matInput placeholder="Password" formControlName="password">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Password</mat-label>
+                                <input [type]="rPwdHide ? 'password' : 'text'" matInput placeholder="password"
+                                    formControlName="password">
+                                <button mat-icon-button matSuffix type="button" (click)="rPwdHide = !rPwdHide">
+                                    <mat-icon>{{rPwdHide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                </button>
                             </mat-form-field>
-                            <mat-form-field>
-                                <input type="password" matInput placeholder="Confirm password"
-                                    formControlName="confirmPassword">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Confirm Password</mat-label>
+                                <input [type]="rConfirmPwdHide ? 'password' : 'text'" matInput
+                                    placeholder="confirm password" formControlName="confirmPassword">
+                                <button mat-icon-button matSuffix type="button"
+                                    (click)="rConfirmPwdHide = !rConfirmPwdHide">
+                                    <mat-icon>{{rConfirmPwdHide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                </button>
                                 <mat-error *ngIf="emailSignUp.get('confirmPassword').invalid">Passwords do not match.
                                 </mat-error>
                             </mat-form-field>
@@ -42,6 +69,7 @@
                                 <button mat-stroked-button type="submit" [disabled]="!emailSignUp.valid">Sign
                                     In</button>
                             </div>
+                            <mat-error *ngIf="registerErrMsg">{{registerErrMsg}}</mat-error>
                         </form>
                     </div>
                 </mat-tab>
