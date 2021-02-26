@@ -1,1 +1,44 @@
-<page-title pageTitle='Project Tracking'></page-title>
+<div class="wrapper">
+    <page-title pageTitle='Project Tracking' class="title"></page-title>
+
+    <div class="content">
+        <div>
+            <form [formGroup]="projectSelectForm" class="form" (ngSubmit)="changeSelection()">
+                <mat-form-field appearance="outline">
+                    <mat-label>Project</mat-label>
+                    <mat-select formControlName="project">
+                        <mat-option *ngFor="let proj of projects" [value]="stringify(proj)">{{proj.id}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Requirement</mat-label>
+                    <mat-select formControlName="requirement">
+                        <mat-option *ngFor="let req of selectedProject?.requirements" [value]="stringify(req)">
+                            {{req.id}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </form>
+        </div>
+        <div>
+            <mat-slide-toggle [formControl]="detailSelect" color="primary">Detailed View
+            </mat-slide-toggle>
+        </div>
+        <ngx-charts-pie-chart *ngIf="projectSelectForm.valid && !detailSelect.value" [view]="view"
+            [scheme]="colorScheme" [results]="pieData" [gradient]="gradient" [legend]="showLegend"
+            [legendPosition]="legendPosition" [labels]="showLabels" [doughnut]="true" [trimLabels]="trimLabels"
+            [legendTitle]="legendTitle">
+            <ng-template #tooltipTemplate let-model="model">
+                <h4>{{model.name}}</h4>
+                <h5>{{model.value}} hrs</h5>
+            </ng-template>
+        </ngx-charts-pie-chart>
+        <ngx-charts-pie-grid *ngIf="projectSelectForm.valid && detailSelect.value" [view]="view" [scheme]="colorScheme"
+            [results]="pieData" [maxLabelLength]="30">
+            <ng-template #tooltipTemplate let-model="model">
+                <h4>{{model.name}}</h4>
+                <h5>{{model.value}} hrs</h5>
+            </ng-template>
+        </ngx-charts-pie-grid>
+    </div>
+</div>

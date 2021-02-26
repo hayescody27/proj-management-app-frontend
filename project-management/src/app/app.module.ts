@@ -22,6 +22,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatTableModule } from '@angular/material/table';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { LoginComponent } from './components/login/login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MyProjectsComponent } from './components/my-projects/my-projects.component';
@@ -34,6 +35,7 @@ import { ProgressService } from './services/progress-service.service';
 import { ProgressInterceptor } from './services/progress-interceptor.service';
 import { BearerTokenInterceptor } from './services/bearer-token-interceptor.interceptor';
 import { ProfileSetupComponent } from './components/profile-setup/profile-setup.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 @NgModule({
   declarations: [
@@ -76,7 +78,9 @@ import { ProfileSetupComponent } from './components/profile-setup/profile-setup.
     MatChipsModule,
     MatTableModule,
     MatDialogModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatSlideToggleModule,
+    NgxChartsModule,
   ],
   providers: [
     ProgressService,
