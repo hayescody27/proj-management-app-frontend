@@ -9,13 +9,16 @@
     </mat-form-field>
     <mat-form-field appearance="outline">
         <mat-label>Risk Status</mat-label>
-        <input matInput formControlName="status">
+        <mat-select formControlName="status">
+            <mat-option *ngFor="let status of statuses | keyvalue: originalOrder" [value]="status.value">
+                {{status.value}}
+            </mat-option>
+        </mat-select>
     </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
     <div style="text-align: right;">
-        <button mat-raised-button color="primary" [mat-dialog-close]="editRiskForm?.value"
-            [disabled]="!editRiskForm?.valid || !editRiskForm.dirty">
+        <button mat-raised-button color="primary" [mat-dialog-close]="editRiskForm?.value" [disabled]="!editRiskForm?.valid || !editRiskForm.dirty">
             <mat-icon>done</mat-icon> Submit
         </button>
         <button mat-raised-button mat-dialog-close>

@@ -41,7 +41,7 @@
     </form>
     <div style="display: flex; flex-flow: column wrap; gap: 10px; flex-grow: 1;">
         <div class="innerTableContainer mat-elevation-z5">
-            <table mat-table [dataSource]="project.risks" style="width: 100%;">
+            <table mat-table [dataSource]="riskDataSource" style="width: 100%;">
 
                 <ng-container matColumnDef="tableTitle">
                     <th mat-header-cell *matHeaderCellDef colspan="4" style="border-bottom: none; font-size: large; font-weight: bold;">
@@ -60,13 +60,13 @@
                 <!-- Description Column -->
                 <ng-container matColumnDef="riskDescription">
                     <th mat-header-cell *matHeaderCellDef> Description </th>
-                    <td mat-cell *matCellDef="let risk"> {{risk.riskDescription}} </td>
+                    <td mat-cell *matCellDef="let risk"> {{risk.description}} </td>
                 </ng-container>
 
                 <!-- Status Column -->
                 <ng-container matColumnDef="riskStatus">
                     <th mat-header-cell *matHeaderCellDef> Status </th>
-                    <td mat-cell *matCellDef="let risk"> {{risk.riskStatus}} </td>
+                    <td mat-cell *matCellDef="let risk"> {{risk.status}} </td>
                 </ng-container>
 
                 <!-- Edit Column -->
@@ -94,7 +94,7 @@
             </table>
         </div>
         <div class="innerTableContainer mat-elevation-z5">
-            <table mat-table [dataSource]="project.requirements" style="width: 100%;">
+            <table mat-table [dataSource]="reqDataSource" style="width: 100%;">
 
                 <ng-container matColumnDef="tableTitle">
                     <th mat-header-cell *matHeaderCellDef colspan="5" style="border-bottom: none; font-size: large; font-weight: bold;">
@@ -113,13 +113,13 @@
                 <!-- Description Column -->
                 <ng-container matColumnDef="reqDescription">
                     <th mat-header-cell *matHeaderCellDef> Description </th>
-                    <td mat-cell *matCellDef="let req"> {{req.reqDescription}} </td>
+                    <td mat-cell *matCellDef="let req"> {{req.description}} </td>
                 </ng-container>
 
                 <!-- Req Type Column -->
                 <ng-container matColumnDef="reqType">
                     <th mat-header-cell *matHeaderCellDef> Req Type </th>
-                    <td mat-cell *matCellDef="let req"> {{req.reqType}} </td>
+                    <td mat-cell *matCellDef="let req"> {{req.type}} </td>
                 </ng-container>
 
                 <!-- Status Column -->

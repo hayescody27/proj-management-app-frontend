@@ -5,10 +5,15 @@ import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core'
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { debounceTime } from 'rxjs/operators';
 import { Project } from 'src/app/entities/project';
+import { Requirement } from 'src/app/entities/requirement';
 import { RequirementPhase } from 'src/app/entities/requirement-phase.enum';
+import { RequirementType } from 'src/app/entities/requirement-type.enum';
+import { Risk } from 'src/app/entities/risk';
+import { RiskStatus } from 'src/app/entities/risk-status.enum';
 import { TeamMember } from 'src/app/entities/team-member';
 import { ProjectService } from 'src/app/services/project-service.service';
 import { UserService } from 'src/app/services/user-service.service';
@@ -32,6 +37,8 @@ export class ProjectOverviewComponent implements OnInit {
   project: Project = <Project>{};
   risksColumns = ['riskDescription', 'riskStatus', 'editRisk', 'deleteRisk'];
   requirementColumns = ['reqDescription', 'reqType', 'reqStatus', 'editReq', 'deleteReq'];
+  riskDataSource = new MatTableDataSource<Risk>();
+  reqDataSource = new MatTableDataSource<Requirement>();
 
   constructor(public dialog: MatDialog, public http: HttpClient, private projectSvc: ProjectService, public userSvc: UserService, private fb: FormBuilder, private router: Router) { }
 
@@ -53,6 +60,8 @@ export class ProjectOverviewComponent implements OnInit {
       projectDescription: [this.project.description],
       projectOwner: [initProjOwner]
     });
+    this.riskDataSource.data = this.project.risks;
+    this.reqDataSource.data = this.project.requirements;
   }
 
   ngAfterViewInit(): void {
@@ -81,6 +90,8 @@ export class ProjectOverviewComponent implements OnInit {
     }
     this.projectSvc.updateProject(this.project).subscribe(x => {
       this.project = x;
+      this.riskDataSource.data = this.project.risks;
+      this.reqDataSource.data = this.project.requirements;
     })
   }
 
@@ -156,6 +167,16 @@ export class ProjectOverviewComponent implements OnInit {
     const dialogRef = this.dialog.open(EditRiskModalComponent, {
       data: risk
     })
+    dialogRef.afterClosed().subscribe(x => {
+      if (x) {
+        this.project.risks.forEach((r: Risk, i) => {
+          if (r.riskId === x.riskId) {
+            this.project.risks[i] = x;
+          }
+        });
+        this.updateProject();
+      }
+    });
   }
 
   deleteRisk(risk) {
@@ -167,13 +188,24 @@ export class ProjectOverviewComponent implements OnInit {
     })
 
     dialogRef.afterClosed().subscribe(x => {
-    })
+      if (x) {
+        this.project.risks.forEach((r: Risk, i) => {
+          if (r.riskId === risk.riskId) {
+            this.project.risks.splice(i, 1);
+          }
+        });
+        this.updateProject();
+      }
+    });
   }
 
   addRisk() {
     const dialogRef = this.dialog.open(AddRiskModalComponent);
     dialogRef.afterClosed().subscribe(x => {
-      console.log(x);
+      if (x) {
+        this.project.risks.push(x);
+        this.updateProject();
+      }
     })
 
   }
@@ -202,7 +234,12 @@ export class ProjectOverviewComponent implements OnInit {
 
   addRequirement() {
     const dialogRef = this.dialog.open(AddRequirementModalComponent);
+
     dialogRef.afterClosed().subscribe(x => {
+      if (x) {
+        this.project.requirements.push(x);
+        this.updateProject();
+      }
     })
   }
 
@@ -234,7 +271,13 @@ export class AddRiskModalComponent {
     status: ['', Validators.required]
   })
 
+  statuses = RiskStatus;
+
   constructor(private fb: FormBuilder) { }
+
+  originalOrder = (a: KeyValue<number, string>, b: KeyValue<number, string>): number => {
+    return 0;
+  }
 
 }
 
@@ -246,11 +289,18 @@ export class AddRiskModalComponent {
 export class EditRiskModalComponent {
 
   editRiskForm = this.fb.group({
-    description: [this.data.riskDescription, Validators.required],
-    status: [this.data.riskStatus, Validators.required]
+    riskId: [this.data.riskId],
+    description: [this.data.description, Validators.required],
+    status: [this.data.status, Validators.required]
   })
 
+  statuses = RiskStatus;
+
   constructor(private fb: FormBuilder, @Inject(MAT_DIALOG_DATA) public data) { }
+
+  originalOrder = (a: KeyValue<number, string>, b: KeyValue<number, string>): number => {
+    return 0;
+  }
 
 }
 
@@ -272,14 +322,14 @@ export class ConfirmModalComponent {
 })
 export class AddRequirementModalComponent {
 
-  reqTypes: any[] = ['Functional', 'Non-Functional'];
-
   addRequirementForm = this.fb.group({
     description: ['', Validators.required],
     type: ['', Validators.required],
-    status: ['', Validators.required]
+    status: ['', Validators.required],
+    dueAt: [0]
   })
 
+  reqTypes = RequirementType;
   reqStatuses = RequirementPhase;
 
   constructor(private fb: FormBuilder) { }

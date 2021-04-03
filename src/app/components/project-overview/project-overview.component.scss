@@ -48,18 +48,6 @@ mat-label {
   border-top: 1px solid #e0e0e0;
 }
 
-.mat-cell,
-.mat-header-cell {
-  display: table-cell;
-  padding: 10px 10px;
-  vertical-align: middle;
-  max-width: 300px;
-}
-.mat-row,
-.mat-header-row {
-  display: table-row;
-}
-
 mat-form-field {
   display: block;
 }

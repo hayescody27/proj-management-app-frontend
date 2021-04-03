@@ -14,7 +14,7 @@
                     <mat-label>Requirement</mat-label>
                     <mat-select formControlName="requirement">
                         <mat-option *ngFor="let req of selectedProject?.requirements" [value]="stringify(req)">
-                            {{req.id}}
+                            {{req.reqId}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
