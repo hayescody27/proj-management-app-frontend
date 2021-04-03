@@ -1,8 +1,10 @@
 import { RequirementStatus } from "./requirement-status";
+import { RequirementType } from "./requirement-type.enum";
 
 export interface Requirement {
-    id: string,
+    reqId: string,
     description: string,
-    type: string,
-    status: RequirementStatus[]
+    type: RequirementType,
+    statuses: RequirementStatus[],
+    dueAt: number
 }

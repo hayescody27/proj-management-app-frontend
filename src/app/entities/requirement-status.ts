@@ -1,4 +1,6 @@
+import { RequirementPhase } from "./requirement-phase.enum";
+
 export interface RequirementStatus {
-    status: RequirementStatus,
-    time: number
+    phase: RequirementPhase,
+    expendedHours: number
 }

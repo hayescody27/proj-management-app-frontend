@@ -1,17 +1,17 @@
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { KeyValue } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { HttpClient } from '@angular/common/http';
-import { RequirementStatusEnum } from 'src/app/entities/requirement-status-enum';
-import { KeyValue } from '@angular/common';
-import { ProjectService } from 'src/app/services/project-service.service';
-import { Project } from 'src/app/entities/project';
-import { TeamMember } from 'src/app/entities/team-member';
-import { debounce, debounceTime, skip } from 'rxjs/operators';
-import { UserService } from 'src/app/services/user-service.service';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { debounceTime } from 'rxjs/operators';
+import { Project } from 'src/app/entities/project';
+import { RequirementPhase } from 'src/app/entities/requirement-phase.enum';
+import { TeamMember } from 'src/app/entities/team-member';
+import { ProjectService } from 'src/app/services/project-service.service';
+import { UserService } from 'src/app/services/user-service.service';
 
 @Component({
   selector: 'app-project-overview',
@@ -280,7 +280,7 @@ export class AddRequirementModalComponent {
     status: ['', Validators.required]
   })
 
-  reqStatuses = RequirementStatusEnum;
+  reqStatuses = RequirementPhase;
 
   constructor(private fb: FormBuilder) { }
 
@@ -305,7 +305,7 @@ export class EditRequirementModalComponent {
     status: [this.data.reqStatus, Validators.required]
   })
 
-  reqStatuses = RequirementStatusEnum;
+  reqStatuses = RequirementPhase;
 
   constructor(private fb: FormBuilder, @Inject(MAT_DIALOG_DATA) public data) { }
 

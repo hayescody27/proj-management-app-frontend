@@ -1,7 +1,7 @@
-import { RiskStatus } from "./risk-status-enum";
+import { RiskStatus } from "./risk-status.enum";
 
 export interface Risk {
-    id: string,
+    riskId: string,
     description: string,
     status: RiskStatus
 }
