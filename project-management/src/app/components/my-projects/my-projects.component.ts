@@ -10,18 +10,16 @@ import { UserService } from 'src/app/services/user-service.service';
   styleUrls: ['./my-projects.component.scss']
 })
 export class MyProjectsComponent implements OnInit {
-  testProject: Project;
+
+  projects: Project[] = [];
 
   constructor(private http: HttpClient, public projectSvc: ProjectService) {
-    this.fetchTestProject();
+
   }
 
   ngOnInit(): void {
-  }
-
-  fetchTestProject() {
-    this.http.get('https://sudonimus.com/projects?id=6067f8690656c50a42127afa').subscribe((x: Project) => {
-      this.testProject = x[0];
+    this.projectSvc.getProjects().subscribe((x: Project[]) => {
+      this.projects = x;
     })
   }
 
