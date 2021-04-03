@@ -1,12 +1,16 @@
 import { Requirement } from "./requirement";
 import { Risk } from "./risk";
+import { TeamMember } from "./team-member";
 
 export interface Project {
-    id: string,
+    _id: string,
+    pid: string,
     name: string,
     description: string,
     projectManager: string,
-    teamMembers: string[],
+    members: TeamMember[],
     risks: Risk[],
-    requirements: Requirement[]
+    requirements: Requirement[],
+    owner: string,
+    createdAt: number
 }

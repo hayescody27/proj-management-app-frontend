@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ProjectService } from 'src/app/services/project-service.service';
 
 @Component({
   selector: 'app-project-tracking',
@@ -11,38 +12,7 @@ export class ProjectTrackingComponent implements OnInit {
   projectSelectForm: FormGroup;
   detailSelect: FormControl = new FormControl(false);
 
-  projects: any[] = [
-    {
-      id: 'P-123456',
-      requirements: [
-        {
-          id: 'R-123456',
-          phases: [
-            {
-              phase: 'Requirements Analysis',
-              time: 50
-            },
-            {
-              phase: 'Designing',
-              time: 5
-            },
-            {
-              phase: 'Coding',
-              time: 100
-            },
-            {
-              phase: 'Testing',
-              time: 20
-            },
-            {
-              phase: 'Project Management',
-              time: 200
-            }
-          ]
-        }
-      ]
-    }
-  ];
+  projects: any[] = [];
 
   selectedProject: any = {}
 
@@ -62,7 +32,7 @@ export class ProjectTrackingComponent implements OnInit {
     domain: ['#e38800', '#00e3d4', '#323ca8', '#4ac754', '#673ab7']
   };
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private projSvc: ProjectService) {
 
   }
 
@@ -78,8 +48,8 @@ export class ProjectTrackingComponent implements OnInit {
     this.projectSelectForm.controls['requirement'].valueChanges.subscribe(r => {
       this.pieData = this.transform(JSON.parse(r).phases);
     });
-    this.detailSelect.valueChanges.subscribe(d => {
-      console.log(d);
+    this.projSvc.getProjects().subscribe((p: any) => {
+      this.projects = p;
     })
   }
 

@@ -1,4 +1,4 @@
 export interface RequirementStatus {
-    status: string,
+    status: RequirementStatus,
     time: number
 }

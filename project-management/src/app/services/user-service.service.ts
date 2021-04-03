@@ -83,4 +83,8 @@ export class UserService {
       this.profileInfo.next(x);
     })
   }
+
+  getUsers(username: string) {
+    return this.http.get(`${this.baseUrl}/users?name=${username}`);
+  }
 }

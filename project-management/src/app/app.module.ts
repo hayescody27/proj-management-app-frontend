@@ -36,6 +36,7 @@ import { ProgressInterceptor } from './services/progress-interceptor.service';
 import { BearerTokenInterceptor } from './services/bearer-token-interceptor.interceptor';
 import { ProfileSetupComponent } from './components/profile-setup/profile-setup.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { ProjectOwnerPipe } from './utility/project-owner.pipe';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
     PageTitleComponent,
     ProgressOverlayComponent,
     ProfileSetupComponent,
+    ProjectOwnerPipe,
 
   ],
   imports: [

@@ -5,7 +5,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 
 .padding-10 {
-    padding: 10px;
+    padding: 10px 10px 0px 10px;
 }
 
 .center {
@@ -25,3 +25,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     display: grid;
 }
 
+table {
+    height: 100%;
+}

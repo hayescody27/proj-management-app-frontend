@@ -39,15 +39,9 @@ mat-label {
     box-shadow: inset 0 0 50px #673ab7;
 }
 
-.outterTableContainer {
-    height: 75vh;  
-    width: 35vw;
-}
-
 .innerTableContainer {
     overflow: auto;
-    height: 100%;  
-    width: 100%; 
+    height: 40vh; 
 }
 
 .mat-table-sticky {
@@ -71,8 +65,10 @@ mat-form-field {
 }
 
 textarea {
-  height: 7.5vh; 
-  min-height: 7.5vh; 
-  max-height: 25vh;
+  height: 7.5vh;
+}
+
+textarea.mat-input-element {
+  resize: none;
 }
 

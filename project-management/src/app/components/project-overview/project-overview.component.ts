@@ -1,10 +1,17 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import { RequirementStatusEnum } from 'src/app/entities/requirement-status-enum';
 import { KeyValue } from '@angular/common';
+import { ProjectService } from 'src/app/services/project-service.service';
+import { Project } from 'src/app/entities/project';
+import { TeamMember } from 'src/app/entities/team-member';
+import { debounce, debounceTime, skip } from 'rxjs/operators';
+import { UserService } from 'src/app/services/user-service.service';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-project-overview',
@@ -13,68 +20,134 @@ import { KeyValue } from '@angular/common';
 })
 export class ProjectOverviewComponent implements OnInit {
 
-  allMembers: any[] = ['New Member 1', 'New Member 2'];
+  @ViewChild('memberInput') memberInput: ElementRef<HTMLInputElement>;
+  @ViewChild('projectName') projectName: ElementRef<HTMLInputElement>;
+  @ViewChild('projectDescription') projectDescription: ElementRef<HTMLInputElement>;
+  @ViewChild('projectOwner') projectOwner: ElementRef<HTMLInputElement>;
+
+  allMembers: any[] = [];
+  projectDetails: FormGroup;
   addMemberCtrl = new FormControl();
   separatorKeysCodes: number[] = [ENTER, COMMA];
-
-  project = {
-    members: ['Cody', 'Jhane', 'James', 'Yoan', 'Roger'],
-    risks: [
-      { riskDescription: 'This is an example risk', riskStatus: 1 },
-      { riskDescription: 'This is an example risk', riskStatus: 2 },
-      { riskDescription: 'This is an example risk', riskStatus: 3 },
-      { riskDescription: 'This is an example risk', riskStatus: 4 },
-      /*       { riskDescription: 'This is an example risk', riskStatus: 1 },
-            { riskDescription: 'This is an example risk', riskStatus: 2 },
-            { riskDescription: 'This is an example risk', riskStatus: 3 },
-            { riskDescription: 'This is an example risk', riskStatus: 4 },
-            { riskDescription: 'This is an example risk', riskStatus: 1 },
-            { riskDescription: 'This is an example risk', riskStatus: 2 },
-            { riskDescription: 'This is an example risk', riskStatus: 3 },
-            { riskDescription: 'This is an example risk', riskStatus: 4 },
-            { riskDescription: 'This is an example risk', riskStatus: 1 },
-            { riskDescription: 'This is an example risk', riskStatus: 2 },
-            { riskDescription: 'This is an example risk', riskStatus: 3 },
-            { riskDescription: 'This is an example risk', riskStatus: 4 },
-            { riskDescription: 'This is an example risk', riskStatus: 1 },
-            { riskDescription: 'This is an example risk', riskStatus: 2 },
-            { riskDescription: 'This is an example risk', riskStatus: 3 },
-            { riskDescription: 'This is an example risk', riskStatus: 4 },
-            { riskDescription: 'This is an example risk', riskStatus: 1 },
-            { riskDescription: 'This is an example risk', riskStatus: 2 },
-            { riskDescription: 'This is an example risk', riskStatus: 3 },
-            { riskDescription: 'This is an example risk', riskStatus: 4 }, */
-    ],
-    requirements: [
-      { reqDescription: 'This will be used as an example for a really long project requirement. The project must be super useful and super cool. The layout must be nice. ', reqType: 'Functional', reqStatus: 'Development' },
-      { reqDescription: 'Requirement 1', reqType: 'Functional', reqStatus: 'Coding' },
-      { reqDescription: 'Requirement 1', reqType: 'Functional', reqStatus: 'Requirements Analysis' },
-      { reqDescription: 'Requirement 1', reqType: 'Functional', reqStatus: 'Designing' },
-      { reqDescription: 'Requirement 1', reqType: 'Non-Functional', reqStatus: 'Testing' },
-      { reqDescription: 'Requirement 1', reqType: 'Functional', reqStatus: 'testing' },
-      { reqDescription: 'Requirement 1', reqType: 'Non-Functional', reqStatus: 'Coding' },
-      { reqDescription: 'Requirement 1', reqType: 'Functional', reqStatus: 'Coding' },
-      { reqDescription: 'Requirement 1', reqType: 'Non-Functional', reqStatus: 'Coding' },
-      { reqDescription: 'Requirement 1', reqType: 'Non-Functional', reqStatus: 'Coding' },
-      { reqDescription: 'Requirement 1', reqType: 'Functional', reqStatus: 'Designing' },
-      { reqDescription: 'Requirement 1', reqType: 'Non-Functional', reqStatus: 'Designing' },
-      { reqDescription: 'Requirement 1', reqType: 'Functional', reqStatus: 'Testing' },
-      { reqDescription: 'Requirement 1', reqType: 'Non-Functional', reqStatus: 'Testing' },
-    ]
-  }
-
+  project: Project = <Project>{};
   risksColumns = ['riskDescription', 'riskStatus', 'editRisk', 'deleteRisk'];
   requirementColumns = ['reqDescription', 'reqType', 'reqStatus', 'editReq', 'deleteReq'];
 
-  constructor(public dialog: MatDialog, public http: HttpClient) { }
+  constructor(public dialog: MatDialog, public http: HttpClient, private projectSvc: ProjectService, public userSvc: UserService, private fb: FormBuilder, private router: Router) { }
 
   ngOnInit(): void {
+    this.project = this.projectSvc.projectOverviewPlaceholder;
+    this.projectSvc.projectOverviewPlaceholder = null;
+
+    this.addMemberCtrl.valueChanges.pipe(debounceTime(500)).subscribe(x => {
+      this.getFilteredUserList();
+    });
+    let initProjOwner = '';
+    this.project.members.forEach(mem => {
+      if (mem.uid === this.project.owner) {
+        initProjOwner = mem.displayName;
+      }
+    })
+    this.projectDetails = this.fb.group({
+      projectName: [this.project.name],
+      projectDescription: [this.project.description],
+      projectOwner: [initProjOwner]
+    });
   }
 
-  addTeamMember(event) {
+  ngAfterViewInit(): void {
+    this.projectName.nativeElement.addEventListener('focusout', () => {
+      console.log('focusout');
+      if (this.project.name !== this.projectDetails.get('projectName').value) {
+        // Update
+        this.project.name = this.projectDetails.get('projectName').value;
+        this.updateProject();
+      }
+    });
+    this.projectDescription.nativeElement.addEventListener('focusout', () => {
+      if (this.project.description !== this.projectDetails.get('projectDescription').value) {
+        // Update
+        this.project.description = this.projectDetails.get('projectDescription').value;
+        this.updateProject();
+      }
+    });
   }
 
-  removeTeamMember(member) {
+  updateProject(skipOwnerCheck?: boolean) {
+    skipOwnerCheck = skipOwnerCheck === null ? false : skipOwnerCheck;
+
+    if (this.userSvc.profileInfo.getValue()._id !== this.project.owner && !skipOwnerCheck) {
+      delete this.project.owner;
+    }
+    this.projectSvc.updateProject(this.project).subscribe(x => {
+      this.project = x;
+    })
+  }
+
+  updateProjectOwner(event: MatAutocompleteSelectedEvent) {
+    let newOwner: TeamMember = JSON.parse(event.option.value);
+    this.project.owner = newOwner.uid;
+    this.projectDetails.get('projectOwner').setValue(newOwner.displayName);
+    this.blur('projectOwner');
+    this.updateProject(true);
+  }
+
+  // team member related methods
+
+  getFilteredUserList() {
+    if (!this.addMemberCtrl.value) {
+      return;
+    }
+    this.allMembers = [];
+    let currentProjMemIds = [];
+    this.project.members.forEach(m => {
+      currentProjMemIds.push(m.uid);
+    })
+    this.userSvc.getUsers(this.addMemberCtrl.value).subscribe((x: any[]) => {
+      x.forEach(m => {
+        if (!currentProjMemIds.includes(m._id)) {
+          this.allMembers.push(m);
+        }
+      })
+    })
+  }
+
+  newMemSelected(event: MatAutocompleteSelectedEvent) {
+    let selected = JSON.parse(event.option.value)
+    let newMem: TeamMember = {
+      displayName: selected.displayName,
+      uid: selected._id,
+      username: selected.username
+    }
+    this.project.members.push(newMem);
+    this.updateProject();
+    this.memberInput.nativeElement.value = '';
+    this.addMemberCtrl.setValue(null);
+    this.allMembers = [];
+  }
+
+  removeTeamMember(member: TeamMember) {
+    if (this.userSvc.profileInfo.getValue()._id === member.uid) {
+      const dialogRef = this.dialog.open(ConfirmModalComponent, {
+        data: {
+          title: 'Remove yourself?',
+          message: 'You will no longer be able to view this project. You will be navigated back to the My Project screen. Do you wish to continue?'
+        }
+      })
+
+      dialogRef.afterClosed().subscribe(x => {
+        if (!x) {
+          return;
+        } else {
+          this.project.members.splice(this.project.members.indexOf(member), 1);
+          this.updateProject();
+          this.router.navigate(['/my-projects']);
+        }
+      })
+    } else if (member.uid !== this.project.owner) {
+      this.project.members.splice(this.project.members.indexOf(member), 1);
+      this.updateProject();
+    }
   }
 
   // CRUD for risks
@@ -100,6 +173,7 @@ export class ProjectOverviewComponent implements OnInit {
   addRisk() {
     const dialogRef = this.dialog.open(AddRiskModalComponent);
     dialogRef.afterClosed().subscribe(x => {
+      console.log(x);
     })
 
   }
@@ -130,6 +204,20 @@ export class ProjectOverviewComponent implements OnInit {
     const dialogRef = this.dialog.open(AddRequirementModalComponent);
     dialogRef.afterClosed().subscribe(x => {
     })
+  }
+
+  // Utility
+
+  stringify(s) {
+    return JSON.stringify(s);
+  }
+
+  preventKeydown(event: KeyboardEvent) {
+    event.preventDefault();
+  }
+
+  blur(element: string) {
+    this[element].nativeElement.blur();
   }
 
 }
