@@ -1,3 +1,14 @@
 <page-title pageTitle='My Projects'></page-title>
 
-<button mat-button (click)="projectSvc.openProject(projects[0])">Placeholder</button>
+<button mat-button (click)="createTestProject();">Create Test Project</button>
+
+<mat-form-field appearance="outline">
+    <mat-label>Select Project</mat-label>
+    <mat-select [(ngModel)]="selectedProject">
+        <mat-option *ngFor="let project of projects" [value]="project">
+            {{project.name}}
+        </mat-option>
+    </mat-select>
+</mat-form-field>
+
+<button mat-button (click)="projectSvc.openProject(selectedProject)">Open Test Project</button>

@@ -6,6 +6,7 @@
         <mat-label>Risk Description</mat-label>
         <textarea matInput formControlName="description">
         </textarea>
+        <mat-hint align="end">{{editRiskForm.get('description').value.length || 0}}/512</mat-hint>
     </mat-form-field>
     <mat-form-field appearance="outline">
         <mat-label>Risk Status</mat-label>

@@ -13,11 +13,11 @@ export class ProjectTrackingComponent implements OnInit {
   detailSelect: FormControl = new FormControl(false);
 
   projects: any[] = [];
-
-  selectedProject: any = {}
+  selectedProject: any = {};
+  selectedRequirement: any = {};
 
   pieData: any[] = [];
-  view: any[] = [1700, 600];
+  view: any[] = [1500, 600];
 
   // options
   gradient: boolean = false;
@@ -47,6 +47,7 @@ export class ProjectTrackingComponent implements OnInit {
     });
     this.projectSelectForm.controls['requirement'].valueChanges.subscribe(r => {
       this.pieData = this.transform(JSON.parse(r).phases);
+      this.selectedRequirement = JSON.parse(r);
     });
     this.projSvc.getProjects().subscribe((p: any) => {
       this.projects = p;
@@ -66,7 +67,7 @@ export class ProjectTrackingComponent implements OnInit {
     data.forEach(d => {
       transformed.push({
         name: d.phase,
-        value: d.time
+        value: d.expendedHours
       })
     })
     return transformed;

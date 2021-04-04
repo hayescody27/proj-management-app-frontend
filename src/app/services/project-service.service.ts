@@ -15,6 +15,10 @@ export class ProjectService {
 
   constructor(private router: Router, private http: HttpClient) { }
 
+  createProject(project) {
+    return this.http.post(`${this.baseUrl}`, project);
+  }
+
   openProject(project: Project) {
     this.projectOverviewPlaceholder = project;
     this.router.navigate(['/project-overview']);

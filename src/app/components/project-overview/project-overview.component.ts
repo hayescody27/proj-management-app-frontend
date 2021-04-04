@@ -36,7 +36,7 @@ export class ProjectOverviewComponent implements OnInit {
   separatorKeysCodes: number[] = [ENTER, COMMA];
   project: Project = <Project>{};
   risksColumns = ['riskDescription', 'riskStatus', 'editRisk', 'deleteRisk'];
-  requirementColumns = ['reqDescription', 'reqType', 'reqStatus', 'editReq', 'deleteReq'];
+  requirementColumns = ['reqDescription', 'reqType', 'reqStatus', 'trackTime', 'editReq', 'deleteReq'];
   riskDataSource = new MatTableDataSource<Risk>();
   reqDataSource = new MatTableDataSource<Requirement>();
 
@@ -206,8 +206,7 @@ export class ProjectOverviewComponent implements OnInit {
         this.project.risks.push(x);
         this.updateProject();
       }
-    })
-
+    });
   }
 
   // CRUD for requirements
@@ -217,6 +216,14 @@ export class ProjectOverviewComponent implements OnInit {
       data: req
     })
     dialogRef.afterClosed().subscribe(x => {
+      if (x) {
+        this.project.requirements.forEach((r: Requirement, i) => {
+          if (r.reqId === req.reqId) {
+            this.project.requirements[i] = x;
+          }
+        });
+        this.updateProject();
+      }
     })
   }
 
@@ -229,7 +236,15 @@ export class ProjectOverviewComponent implements OnInit {
     })
 
     dialogRef.afterClosed().subscribe(x => {
-    })
+      if (x) {
+        this.project.requirements.forEach((r: Requirement, i) => {
+          if (r.reqId === req.reqId) {
+            this.project.requirements.splice(i, 1);
+          }
+        });
+        this.updateProject();
+      }
+    });
   }
 
   addRequirement() {
@@ -241,6 +256,15 @@ export class ProjectOverviewComponent implements OnInit {
         this.updateProject();
       }
     })
+  }
+
+  trackTime(requirement) {
+    const dialogRef = this.dialog.open(TimeTrackerModalComponent, {
+      data: {
+        requirement: requirement
+      }
+    });
+
   }
 
   // Utility
@@ -325,12 +349,12 @@ export class AddRequirementModalComponent {
   addRequirementForm = this.fb.group({
     description: ['', Validators.required],
     type: ['', Validators.required],
-    status: ['', Validators.required],
+    currentPhase: ['', Validators.required],
     dueAt: [0]
   })
 
   reqTypes = RequirementType;
-  reqStatuses = RequirementPhase;
+  reqPhases = RequirementPhase;
 
   constructor(private fb: FormBuilder) { }
 
@@ -347,20 +371,32 @@ export class AddRequirementModalComponent {
 })
 export class EditRequirementModalComponent {
 
-  reqTypes: any[] = ['Functional', 'Non-Functional'];
-
   editRequirementForm = this.fb.group({
-    description: [this.data.reqDescription, Validators.required],
-    type: [this.data.reqType, Validators.required],
-    status: [this.data.reqStatus, Validators.required]
+    description: [this.data.description, Validators.required],
+    type: [this.data.type, Validators.required],
+    currentPhase: [this.data.currentPhase, Validators.required],
+    dueAt: [0]
   })
 
-  reqStatuses = RequirementPhase;
+  reqTypes = RequirementType;
+  reqPhases = RequirementPhase;
 
   constructor(private fb: FormBuilder, @Inject(MAT_DIALOG_DATA) public data) { }
 
   originalOrder = (a: KeyValue<number, string>, b: KeyValue<number, string>): number => {
     return 0;
   }
+
+}
+
+@Component({
+  selector: 'time-tracker-modal',
+  templateUrl: 'time-tracker-modal.component.html',
+  styleUrls: ['./project-overview.component.scss']
+})
+export class TimeTrackerModalComponent {
+
+
+  constructor(private fb: FormBuilder, @Inject(MAT_DIALOG_DATA) public data) { }
 
 }

@@ -28,7 +28,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MyProjectsComponent } from './components/my-projects/my-projects.component';
 import { NewProjectComponent } from './components/new-project/new-project.component';
 import { ProjectTrackingComponent } from './components/project-tracking/project-tracking.component';
-import { AddRequirementModalComponent, AddRiskModalComponent, ConfirmModalComponent, EditRequirementModalComponent, EditRiskModalComponent, ProjectOverviewComponent } from './components/project-overview/project-overview.component';
+import { AddRequirementModalComponent, AddRiskModalComponent, ConfirmModalComponent, EditRequirementModalComponent, EditRiskModalComponent, ProjectOverviewComponent, TimeTrackerModalComponent } from './components/project-overview/project-overview.component';
 import { PageTitleComponent } from './components/page-title/page-title.component';
 import { ProgressOverlayComponent } from './components/progress-overlay/progress-overlay.component';
 import { ProgressService } from './services/progress-service.service';
@@ -52,6 +52,7 @@ import { RiskStatusPipe } from './utility/risk-status.pipe';
     ConfirmModalComponent,
     AddRequirementModalComponent,
     EditRequirementModalComponent,
+    TimeTrackerModalComponent,
     PageTitleComponent,
     ProgressOverlayComponent,
     ProfileSetupComponent,

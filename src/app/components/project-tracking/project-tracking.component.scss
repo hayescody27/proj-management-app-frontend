@@ -2,6 +2,7 @@
     display: flex; 
     flex-flow: column; 
     height: calc(100vh - 64px);
+    padding: 0px 20px;
 }
 
 .title {
@@ -16,6 +17,20 @@
     flex: 1 1 auto;
 }
 
-.mat-form-field + .mat-form-field {
-    margin-left: 8px;
+mat-form-field {
+    min-width: 20em;
+    max-width: 20em;
+}
+
+
+mat-label {
+    font-size: large;
+}
+
+textarea {
+    height: 7.5vh;
+}
+  
+textarea.mat-input-element {
+    resize: none;
 }

@@ -6,28 +6,28 @@
         <mat-label>Requirement Description</mat-label>
         <textarea matInput formControlName="description">
         </textarea>
+        <mat-hint align="end">{{editRequirementForm.get('description').value.length || 0}}/512</mat-hint>
     </mat-form-field>
     <mat-form-field appearance="outline">
         <mat-label>Requirement Type</mat-label>
         <mat-select formControlName="type">
-            <mat-option *ngFor="let type of reqTypes" [value]="type">
-                {{type}}
+            <mat-option *ngFor="let type of reqTypes | keyvalue: originalOrder" [value]="type.value">
+                {{type.value}}
             </mat-option>
         </mat-select>
     </mat-form-field>
     <mat-form-field appearance="outline">
-        <mat-label>Requirement Status</mat-label>
-        <mat-select formControlName="status">
-            <mat-option *ngFor="let status of reqStatuses | keyvalue: originalOrder" [value]="status.key">
-                {{status.value}}
+        <mat-label>Requirement Phase</mat-label>
+        <mat-select formControlName="currentPhase">
+            <mat-option *ngFor="let phase of reqPhases | keyvalue: originalOrder" [value]="phase.value">
+                {{phase.value}}
             </mat-option>
         </mat-select>
     </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
     <div style="text-align: right;">
-        <button mat-raised-button color="primary" [mat-dialog-close]="editRequirementForm.value"
-            [disabled]="!editRequirementForm.valid || !editRequirementForm.dirty">
+        <button mat-raised-button color="primary" [mat-dialog-close]="editRequirementForm.value" [disabled]="!editRequirementForm.valid || !editRequirementForm.dirty">
             <mat-icon>done</mat-icon> Submit
         </button>
         <button mat-raised-button mat-dialog-close>
