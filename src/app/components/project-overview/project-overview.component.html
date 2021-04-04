@@ -4,13 +4,13 @@
     <form [formGroup]="projectDetails">
         <mat-form-field appearance="outline">
             <mat-label>Project Name</mat-label>
-            <input matInput formControlName="projectName" #projectName>
+            <input matInput formControlName="projectName" #projectName maxlength="128">
             <mat-hint align="end">{{projectDetails.get('projectName').value.length || 0}}/128</mat-hint>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
             <mat-label>Project Description</mat-label>
-            <textarea class="projectDescription" matInput formControlName="projectDescription" #projectDescription></textarea>
+            <textarea class="projectDescription" matInput formControlName="projectDescription" #projectDescription maxlength="512"></textarea>
             <mat-hint align="end">{{projectDetails.get('projectDescription').value.length || 0}}/512</mat-hint>
         </mat-form-field>
 

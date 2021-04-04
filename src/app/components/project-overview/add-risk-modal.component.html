@@ -4,7 +4,7 @@
 <mat-dialog-content [formGroup]="addRiskForm">
     <mat-form-field appearance="outline">
         <mat-label>Risk Description</mat-label>
-        <textarea matInput formControlName="description">
+        <textarea matInput formControlName="description" maxlength="512">
         </textarea>
         <mat-hint align="end">{{addRiskForm.get('description').value.length || 0}}/512</mat-hint>
     </mat-form-field>

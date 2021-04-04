@@ -4,7 +4,7 @@
 <mat-dialog-content [formGroup]="editRequirementForm">
     <mat-form-field appearance="outline">
         <mat-label>Requirement Description</mat-label>
-        <textarea matInput formControlName="description">
+        <textarea matInput formControlName="description" maxlength="512">
         </textarea>
         <mat-hint align="end">{{editRequirementForm.get('description').value.length || 0}}/512</mat-hint>
     </mat-form-field>

@@ -5,6 +5,7 @@ import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core'
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { debounceTime } from 'rxjs/operators';
@@ -41,7 +42,8 @@ export class ProjectOverviewComponent implements OnInit {
   riskDataSource = new MatTableDataSource<Risk>();
   reqDataSource = new MatTableDataSource<Requirement>();
 
-  constructor(public dialog: MatDialog, public http: HttpClient, private projectSvc: ProjectService, public userSvc: UserService, private fb: FormBuilder, private router: Router) { }
+  constructor(public dialog: MatDialog, public http: HttpClient, private projectSvc: ProjectService, public userSvc: UserService, private fb: FormBuilder, private router: Router,
+    private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.project = this.projectSvc.projectOverviewPlaceholder;
@@ -50,19 +52,7 @@ export class ProjectOverviewComponent implements OnInit {
     this.addMemberCtrl.valueChanges.pipe(debounceTime(500)).subscribe(x => {
       this.getFilteredUserList();
     });
-    let initProjOwner = '';
-    this.project.members.forEach(mem => {
-      if (mem.uid === this.project.owner) {
-        initProjOwner = mem.displayName;
-      }
-    })
-    this.projectDetails = this.fb.group({
-      projectName: [this.project.name],
-      projectDescription: [this.project.description],
-      projectOwner: [initProjOwner]
-    });
-    this.riskDataSource.data = this.project.risks;
-    this.reqDataSource.data = this.project.requirements;
+    this.setProject();
   }
 
   ngAfterViewInit(): void {
@@ -83,6 +73,22 @@ export class ProjectOverviewComponent implements OnInit {
     });
   }
 
+  setProject() {
+    let initProjOwner = '';
+    this.project.members.forEach(mem => {
+      if (mem.uid === this.project.owner) {
+        initProjOwner = mem.displayName;
+      }
+    })
+    this.projectDetails = this.fb.group({
+      projectName: [this.project.name],
+      projectDescription: [this.project.description],
+      projectOwner: [initProjOwner]
+    });
+    this.riskDataSource.data = this.project.risks;
+    this.reqDataSource.data = this.project.requirements;
+  }
+
   updateProject(skipOwnerCheck?: boolean) {
     skipOwnerCheck = skipOwnerCheck === null ? false : skipOwnerCheck;
 
@@ -93,7 +99,34 @@ export class ProjectOverviewComponent implements OnInit {
       this.project = x;
       this.riskDataSource.data = this.project.risks;
       this.reqDataSource.data = this.project.requirements;
+    }, err => {
+      this.handleUpdateProjectError(err);
+    });
+  }
+
+  handleUpdateProjectError(err) {
+    this.snackBar.open(err.error.message[0], null, {
+      duration: 3000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+      panelClass: ['red-snackbar']
+    });
+    this.projectSvc.getProjectById(this.project._id).subscribe(x => {
+      this.project = x[0];
+      this.setProject();
+    }, () => {
+      this.unknownError();
     })
+  }
+
+  unknownError() {
+    this.snackBar.open('Unknown error occurred. Please try again.', null, {
+      duration: 3000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+      panelClass: ['red-snackbar']
+    });
+    this.router.navigate(['/my-projects']);
   }
 
   updateProjectOwner(event: MatAutocompleteSelectedEvent) {
