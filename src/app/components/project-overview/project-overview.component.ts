@@ -5,12 +5,13 @@ import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core'
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { debounceTime } from 'rxjs/operators';
 import { Project } from 'src/app/entities/project';
 import { Requirement } from 'src/app/entities/requirement';
 import { RequirementPhase } from 'src/app/entities/requirement-phase.enum';
+import { RequirementStatus } from 'src/app/entities/requirement-status';
 import { RequirementType } from 'src/app/entities/requirement-type.enum';
 import { Risk } from 'src/app/entities/risk';
 import { RiskStatus } from 'src/app/entities/risk-status.enum';
@@ -265,6 +266,24 @@ export class ProjectOverviewComponent implements OnInit {
       }
     });
 
+    dialogRef.afterClosed().subscribe(x => {
+      let changes = false;
+      x.requirement.phases.forEach((p, i) => {
+        if (x.addedHours[p.phase]) {
+          changes = true;
+          x.requirement.phases[i].expendedHours += x.addedHours[p.phase];
+        }
+      });
+      if (changes) {
+        this.project.requirements.forEach((r: Requirement, i) => {
+          if (r.reqId === x.requirement.reqId) {
+            this.project.requirements[i] = x.requirement;
+          }
+        });
+        this.updateProject();
+      }
+    })
+
   }
 
   // Utility
@@ -397,6 +416,26 @@ export class EditRequirementModalComponent {
 export class TimeTrackerModalComponent {
 
 
+  phasesColumns = ['phase', 'expendedHours', 'editHours'];
+  datasource = new MatTableDataSource<any>();
+  editValueHolder = {};
+
   constructor(private fb: FormBuilder, @Inject(MAT_DIALOG_DATA) public data) { }
+
+  ngOnInit(): void {
+    this.datasource.data = this.data.requirement.phases;
+
+  }
+
+  updateExpendedHours(phase) {
+    this.datasource.data = this.data.requirement.phases;
+  }
+
+  close() {
+    return {
+      requirement: this.data.requirement,
+      addedHours: this.editValueHolder
+    }
+  }
 
 }
