@@ -1,0 +1,44 @@
+<h2 mat-dialog-title>
+    {{title}}
+</h2>
+<mat-dialog-content [formGroup]="editRiskForm">
+    <mat-form-field appearance="outline">
+        <mat-label>Risk Description</mat-label>
+        <textarea matInput formControlName="description" maxlength="512" [readonly]="!editMode">
+        </textarea>
+        <mat-hint align="end">{{editRiskForm.get('description').value.length || 0}}/512</mat-hint>
+    </mat-form-field>
+    <mat-form-field appearance="outline" *ngIf="!editMode">
+        <mat-label>Risk Status</mat-label>
+        <input matInput formControlName="status" [readonly]="!editMode">
+    </mat-form-field>
+    <mat-form-field appearance="outline" *ngIf="editMode">
+        <mat-label>Risk Status</mat-label>
+        <mat-select formControlName="status">
+            <mat-option *ngFor="let status of statuses | keyvalue: originalOrder" [value]="status.value">
+                {{status.value}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+    <div *ngIf="!editMode">
+        <button mat-fab color="primary" (click)="editMode = true; title = 'Edit Risk'">
+            <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-fab (click)="onDelete.emit(data)" color="warn">
+            <mat-icon>delete</mat-icon>
+        </button>
+        <button mat-fab color="" mat-dialog-close>
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+    <div style="text-align: right;" *ngIf="editMode">
+        <button mat-fab (click)="editMode = false; title = 'View Risk'; resetForm()" color="">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <button mat-fab color="primary" (click)="onEdit.emit(editRiskForm?.value)" [disabled]="!editRiskForm?.valid || !editRiskForm.dirty">
+            <mat-icon>done</mat-icon>
+        </button>
+    </div>
+</mat-dialog-actions>

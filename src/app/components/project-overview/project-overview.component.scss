@@ -1,18 +1,48 @@
-mat-form-field {
-    min-width: 20vw;
-    max-width: 20vw;
+.wrapper {
+  display: flex; 
+  flex-flow: row wrap; 
+  justify-content: center;
+  align-items: flex-start; 
+  gap: 20px; 
+  padding: 0px 2%; 
+  max-height: calc(100vh - 64px);
 }
 
-mat-label {
-    font-size: large;
+.projectForm {
+  width: 20%;
+  min-width: 20%;
+  max-width: 20%;
 }
+
+.gridContainer {
+  display: flex; 
+  flex-flow: column wrap; 
+  gap: 10px; 
+  flex-grow: 1;
+  width: 75%;
+  max-width: 75%;
+  min-width: 75%;
+}
+
+.tableHeader {
+  border-bottom: none; 
+  font-size: large; 
+  font-weight: bold;
+}
+
+.tableTitle {
+  display: flex; 
+  align-items: center;
+}
+
+// project desc text area
 
 .projectDescription {
     overflow: auto;
 }
 
 .projectDescription::-webkit-scrollbar {
-    width: 10px;
+    width: 5px;
   }
   
 .projectDescription::-webkit-scrollbar-track {
@@ -25,8 +55,18 @@ mat-label {
     box-shadow: inset 0 0 50px #673ab7;
 }
 
+// end project desc text area
+
+// inner table
+.innerTableContainer {
+  overflow: auto;
+  height: 40vh; 
+  scroll-padding: 10px;
+  scroll-margin: 10px;
+}
+
 .innerTableContainer::-webkit-scrollbar {
-    width: 10px;
+    width: 5px;
   }
   
 .innerTableContainer::-webkit-scrollbar-track {
@@ -39,17 +79,73 @@ mat-label {
     box-shadow: inset 0 0 50px #673ab7;
 }
 
-.innerTableContainer {
-    overflow: auto;
-    height: 40vh; 
+
+// end inner table
+
+
+// risks columns
+
+.mat-column-riskDescription {
+  width: 40%;
+}
+
+.mat-column-riskStatus {
+  width: 20%;
+  text-align: center;
+}
+
+.mat-column-editRisk {
+  width: 20%;
+  text-align: center;
+}
+
+.mat-column-deleteRisk {
+  width: 20%;
+  text-align: center;
+}
+
+// end risks columns
+
+// requirements columns
+
+.mat-column-reqDescription {
+  width: 40%;
+}
+.mat-column-reqType {
+  width: 15%;
+  text-align: center;
+}
+.mat-column-reqStatus {
+  width: 15%;
+  text-align: center;
+}
+.mat-column-trackTime {
+  width: 10%;
+  text-align: center;
+}
+.mat-column-editReq {
+  width: 10%;
+  text-align: center;
+}
+.mat-column-deleteReq {
+  width: 10%;
+  text-align: center;
+}
+
+
+// globals
+
+mat-form-field {
+  min-width: 100%;
+  max-width: 100%;
+}
+
+mat-label {
+  font-size: large;
 }
 
 .mat-table-sticky {
   border-top: 1px solid #e0e0e0;
-}
-
-mat-form-field {
-  display: block;
 }
 
 textarea {
@@ -60,8 +156,63 @@ textarea.mat-input-element {
   resize: none;
 }
 
+td.mat-cell {
+  vertical-align: text-top;
+  padding: 5px 20px;
+}
+
+// end globals
+
+// utility
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.black {
+  color: black;
+}
+
+// end utility
+
 .addHoursField {
-  max-width: 10em !important;
-  min-width: 10em !important;
+  max-width: 5em !important;
+  min-width: 5em !important;
+}
+
+@media only screen and (max-width: 850px) {
+  .projectForm {
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+  }
+  
+  .gridContainer {
+    display: flex; 
+    flex-flow: column nowrap; 
+    gap: 30px;
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+    padding: 0% 2% 5% 2%; 
+  }
+
+  td.mat-cell {
+    vertical-align: middle;
+  }
+
+  textarea {
+    height: 15vh;
+  }
+}
+
+@media only screen and (max-height: 500px) {
+  .innerTableContainer {
+    height: 100vh;
+  }
 }
 

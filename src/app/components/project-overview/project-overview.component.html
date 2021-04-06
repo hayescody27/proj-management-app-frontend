@@ -1,7 +1,7 @@
 <page-title pageTitle='Project Overview'></page-title>
 
-<div style="display: flex; flex-flow: row wrap; align-items: flex-start; gap: 20px; padding: 0px 20px; max-height: calc(100vh - 64px);">
-    <form [formGroup]="projectDetails">
+<div class="wrapper">
+    <form [formGroup]="projectDetails" class="projectForm">
         <mat-form-field appearance="outline">
             <mat-label>Project Name</mat-label>
             <input matInput formControlName="projectName" #projectName maxlength="128">
@@ -41,19 +41,22 @@
             </mat-autocomplete>
         </mat-form-field>
     </form>
-    <div style="display: flex; flex-flow: column wrap; gap: 10px; flex-grow: 1;">
+    <div class="spacer"></div>
+    <div class="gridContainer">
         <div class="innerTableContainer mat-elevation-z5">
-            <table mat-table [dataSource]="riskDataSource" style="width: 100%;">
-
+            <table mat-table [dataSource]="riskDataSource" class="fullWidth">
                 <ng-container matColumnDef="tableTitle">
-                    <th mat-header-cell *matHeaderCellDef colspan="4" style="border-bottom: none; font-size: large; font-weight: bold;">
-                        <div style="display: flex; align-items: center;">
+                    <th mat-header-cell *matHeaderCellDef colspan="4" class="tableHeader">
+                        <div class="tableTitle">
                             <div>
                                 Project Risks
                             </div>
-                            <span style="flex: 1 1 auto;"></span>
-                            <button mat-stroked-button (click)="addRisk()" style="color: black;">
+                            <span class="spacer"></span>
+                            <button mat-stroked-button (click)="addRisk()" class="black" *ngIf="!(isHandset$ | async)">
                                 <mat-icon>add</mat-icon> Add Risk
+                            </button>
+                            <button mat-mini-fab color="primary" (click)="addRisk()" *ngIf="(isHandset$ | async)">
+                                <mat-icon>add</mat-icon>
                             </button>
                         </div>
                     </th>
@@ -61,8 +64,8 @@
 
                 <!-- Description Column -->
                 <ng-container matColumnDef="riskDescription">
-                    <th mat-header-cell *matHeaderCellDef> Description </th>
-                    <td mat-cell *matCellDef="let risk"> {{risk.description}} </td>
+                    <th mat-header-cell *matHeaderCellDef> {{ (isHandset$ | async) ? 'Description (Click to view)' : 'Description'}} </th>
+                    <td mat-cell *matCellDef="let risk" (click)="showRisk(risk)"> {{risk.description}} </td>
                 </ng-container>
 
                 <!-- Status Column -->
@@ -73,8 +76,8 @@
 
                 <!-- Edit Column -->
                 <ng-container matColumnDef="editRisk">
-                    <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Edit </th>
-                    <td mat-cell *matCellDef="let row" style="text-align: center;">
+                    <th mat-header-cell *matHeaderCellDef> Edit </th>
+                    <td mat-cell *matCellDef="let row">
                         <button mat-icon-button (click)="editRisk(row)" color="primary">
                             <mat-icon>edit</mat-icon>
                         </button>
@@ -83,30 +86,33 @@
 
                 <!-- Delete Column -->
                 <ng-container matColumnDef="deleteRisk">
-                    <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Delete </th>
-                    <td mat-cell *matCellDef="let row" style="text-align: center;">
+                    <th mat-header-cell *matHeaderCellDef> Delete </th>
+                    <td mat-cell *matCellDef="let row">
                         <button mat-icon-button (click)="deleteRisk(row)" color="warn">
                             <mat-icon>delete</mat-icon>
                         </button>
                     </td>
                 </ng-container>
                 <tr mat-header-row *matHeaderRowDef="['tableTitle']; sticky: true"></tr>
-                <tr mat-header-row *matHeaderRowDef="risksColumns; sticky: true"></tr>
-                <tr mat-row *matRowDef="let row; columns: risksColumns;"></tr>
+                <tr mat-header-row *matHeaderRowDef="(risksColumns | async); sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: (risksColumns | async);"></tr>
             </table>
         </div>
         <div class="innerTableContainer mat-elevation-z5">
-            <table mat-table [dataSource]="reqDataSource" style="width: 100%;">
+            <table mat-table [dataSource]="reqDataSource" class="fullWidth">
 
                 <ng-container matColumnDef="tableTitle">
-                    <th mat-header-cell *matHeaderCellDef colspan="6" style="border-bottom: none; font-size: large; font-weight: bold;">
-                        <div style="display: flex; align-items: center;">
+                    <th mat-header-cell *matHeaderCellDef colspan="6" class="tableHeader">
+                        <div class="tableTitle">
                             <div>
                                 Project Requirements
                             </div>
-                            <span style="flex: 1 1 auto;"></span>
-                            <button mat-stroked-button (click)="addRequirement()" style="color: black;">
+                            <span class="spacer"></span>
+                            <button mat-stroked-button (click)="addRequirement()" class="black" *ngIf="!(isHandset$ | async)">
                                 <mat-icon>add</mat-icon> Add Requirement
+                            </button>
+                            <button mat-mini-fab color="primary" (click)="addRequirement()" *ngIf="(isHandset$ | async)">
+                                <mat-icon>add</mat-icon>
                             </button>
                         </div>
                     </th>
@@ -114,8 +120,8 @@
 
                 <!-- Description Column -->
                 <ng-container matColumnDef="reqDescription">
-                    <th mat-header-cell *matHeaderCellDef> Description </th>
-                    <td mat-cell *matCellDef="let req"> {{req.description}} </td>
+                    <th mat-header-cell *matHeaderCellDef> {{ (isHandset$ | async) ? 'Description (Click to view)' : 'Description'}} </th>
+                    <td mat-cell *matCellDef="let req" (click)="showRequirement(req)"> {{req.description}} </td>
                 </ng-container>
 
                 <!-- Req Type Column -->
@@ -132,8 +138,8 @@
 
                 <!-- Time tracking Column -->
                 <ng-container matColumnDef="trackTime">
-                    <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Track </th>
-                    <td mat-cell *matCellDef="let row" style="text-align: center;">
+                    <th mat-header-cell *matHeaderCellDef> Track </th>
+                    <td mat-cell *matCellDef="let row">
                         <button mat-icon-button (click)="trackTime(row)" color="primary">
                             <mat-icon>timer</mat-icon>
                         </button>
@@ -142,8 +148,8 @@
 
                 <!-- Edit Column -->
                 <ng-container matColumnDef="editReq">
-                    <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Edit </th>
-                    <td mat-cell *matCellDef="let row" style="text-align: center;">
+                    <th mat-header-cell *matHeaderCellDef> Edit </th>
+                    <td mat-cell *matCellDef="let row">
                         <button mat-icon-button (click)="editRequirement(row)" color="primary">
                             <mat-icon>edit</mat-icon>
                         </button>
@@ -152,8 +158,8 @@
 
                 <!-- Delete Column -->
                 <ng-container matColumnDef="deleteReq">
-                    <th mat-header-cell *matHeaderCellDef style="text-align: center;"> Delete </th>
-                    <td mat-cell *matCellDef="let row" style="text-align: center;">
+                    <th mat-header-cell *matHeaderCellDef> Delete </th>
+                    <td mat-cell *matCellDef="let row">
                         <button mat-icon-button (click)="deleteRequirement(row)" color="warn">
                             <mat-icon>delete</mat-icon>
                         </button>
@@ -161,8 +167,8 @@
                 </ng-container>
 
                 <tr mat-header-row *matHeaderRowDef="['tableTitle']; sticky: true"></tr>
-                <tr mat-header-row *matHeaderRowDef="requirementColumns; sticky: true"></tr>
-                <tr mat-row *matRowDef="let row; columns: requirementColumns;"></tr>
+                <tr mat-header-row *matHeaderRowDef="(requirementColumns | async); sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: (requirementColumns | async);"></tr>
             </table>
         </div>
     </div>

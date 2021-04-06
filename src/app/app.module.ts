@@ -31,12 +31,15 @@ import { NewProjectComponent } from './components/new-project/new-project.compon
 import { PageTitleComponent } from './components/page-title/page-title.component';
 import { ProfileSetupComponent } from './components/profile-setup/profile-setup.component';
 import { ProgressOverlayComponent } from './components/progress-overlay/progress-overlay.component';
-import { AddRequirementModalComponent, AddRiskModalComponent, ConfirmModalComponent, EditRequirementModalComponent, EditRiskModalComponent, ProjectOverviewComponent, TimeTrackerModalComponent } from './components/project-overview/project-overview.component';
+import { AddRequirementModalComponent, AddRiskModalComponent, ConfirmModalComponent, EditRequirementModalComponent, EditRiskModalComponent, ProjectOverviewComponent, TimeTrackerModalComponent, MobileRiskViewModalComponent, MobileRequirementViewModalComponent } from './components/project-overview/project-overview.component';
 import { ProjectTrackingComponent } from './components/project-tracking/project-tracking.component';
 import { BearerTokenInterceptor } from './services/bearer-token-interceptor.interceptor';
 import { ProgressService } from './services/progress-service.service';
 import { ProjectOwnerPipe } from './utility/project-owner.pipe';
 import { RiskStatusPipe } from './utility/risk-status.pipe';
+import { MainNavComponent } from './components/main-nav/main-nav.component';
+import { LayoutModule } from '@angular/cdk/layout';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 
 @NgModule({
@@ -53,11 +56,14 @@ import { RiskStatusPipe } from './utility/risk-status.pipe';
     AddRequirementModalComponent,
     EditRequirementModalComponent,
     TimeTrackerModalComponent,
+    MobileRiskViewModalComponent,
+    MobileRequirementViewModalComponent,
     PageTitleComponent,
     ProgressOverlayComponent,
     ProfileSetupComponent,
     ProjectOwnerPipe,
     RiskStatusPipe,
+    MainNavComponent,
 
   ],
   imports: [
@@ -87,6 +93,8 @@ import { RiskStatusPipe } from './utility/risk-status.pipe';
     MatSlideToggleModule,
     MatSnackBarModule,
     NgxChartsModule,
+    LayoutModule,
+    MatSidenavModule,
   ],
   providers: [
     ProgressService,

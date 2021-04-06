@@ -1,0 +1,59 @@
+<h2 mat-dialog-title>
+    {{title}}
+</h2>
+<mat-dialog-content [formGroup]="editRequirementForm">
+    <mat-form-field appearance="outline">
+        <mat-label>Requirement Description</mat-label>
+        <textarea matInput formControlName="description" maxlength="512" [readonly]="!editMode">
+        </textarea>
+        <mat-hint align="end">{{editRequirementForm.get('description').value.length || 0}}/512</mat-hint>
+    </mat-form-field>
+    <mat-form-field appearance="outline" *ngIf="!editMode">
+        <mat-label>Requirement Type</mat-label>
+        <input matInput formControlName="type" [readonly]="!editMode">
+    </mat-form-field>
+    <mat-form-field appearance="outline" *ngIf="editMode">
+        <mat-label>Requirement Type</mat-label>
+        <mat-select formControlName="type">
+            <mat-option *ngFor="let type of reqTypes | keyvalue: originalOrder" [value]="type.value">
+                {{type.value}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline" *ngIf="!editMode">
+        <mat-label>Requirement Phase</mat-label>
+        <input matInput formControlName="currentPhase" [readonly]="!editMode">
+    </mat-form-field>
+    <mat-form-field appearance="outline" *ngIf="editMode">
+        <mat-label>Requirement Phase</mat-label>
+        <mat-select formControlName="currentPhase">
+            <mat-option *ngFor="let phase of reqPhases | keyvalue: originalOrder" [value]="phase.value">
+                {{phase.value}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+    <div *ngIf="!editMode">
+        <button mat-fab color="primary" (click)="onTimeTrack.emit(data)">
+            <mat-icon>timer</mat-icon>
+        </button>
+        <button mat-fab color="primary" (click)="editMode = true; title = 'Edit Requirement'">
+            <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-fab (click)="onDelete.emit(data)" color="warn">
+            <mat-icon>delete</mat-icon>
+        </button>
+        <button mat-fab color="" mat-dialog-close>
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+    <div style="text-align: right;" *ngIf="editMode">
+        <button mat-fab (click)="editMode = false; title = 'View Requirement'; resetForm()" color="">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <button mat-fab color="primary" (click)="onEdit.emit(editRequirementForm?.value)" [disabled]="!editRequirementForm?.valid || !editRequirementForm.dirty">
+            <mat-icon>done</mat-icon>
+        </button>
+    </div>
+</mat-dialog-actions>

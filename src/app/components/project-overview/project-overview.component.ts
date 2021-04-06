@@ -1,18 +1,20 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { KeyValue } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatTable, MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { debounceTime } from 'rxjs/operators';
+import { EventEmitter } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { debounceTime, map, shareReplay } from 'rxjs/operators';
 import { Project } from 'src/app/entities/project';
 import { Requirement } from 'src/app/entities/requirement';
 import { RequirementPhase } from 'src/app/entities/requirement-phase.enum';
-import { RequirementStatus } from 'src/app/entities/requirement-status';
 import { RequirementType } from 'src/app/entities/requirement-type.enum';
 import { Risk } from 'src/app/entities/risk';
 import { RiskStatus } from 'src/app/entities/risk-status.enum';
@@ -32,18 +34,24 @@ export class ProjectOverviewComponent implements OnInit {
   @ViewChild('projectDescription') projectDescription: ElementRef<HTMLInputElement>;
   @ViewChild('projectOwner') projectOwner: ElementRef<HTMLInputElement>;
 
+  isHandset$: Observable<boolean> = this.bpo.observe(Breakpoints.Handset)
+    .pipe(
+      map(result => result.matches),
+      shareReplay()
+    )
+
   allMembers: any[] = [];
   projectDetails: FormGroup;
   addMemberCtrl = new FormControl();
   separatorKeysCodes: number[] = [ENTER, COMMA];
   project: Project = <Project>{};
-  risksColumns = ['riskDescription', 'riskStatus', 'editRisk', 'deleteRisk'];
-  requirementColumns = ['reqDescription', 'reqType', 'reqStatus', 'trackTime', 'editReq', 'deleteReq'];
+  risksColumns: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
+  requirementColumns: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
   riskDataSource = new MatTableDataSource<Risk>();
   reqDataSource = new MatTableDataSource<Requirement>();
 
   constructor(public dialog: MatDialog, public http: HttpClient, private projectSvc: ProjectService, public userSvc: UserService, private fb: FormBuilder, private router: Router,
-    private snackBar: MatSnackBar) { }
+    private snackBar: MatSnackBar, private bpo: BreakpointObserver) { }
 
   ngOnInit(): void {
     this.project = this.projectSvc.projectOverviewPlaceholder;
@@ -53,6 +61,16 @@ export class ProjectOverviewComponent implements OnInit {
       this.getFilteredUserList();
     });
     this.setProject();
+
+    this.isHandset$.subscribe(x => {
+      if (x) {
+        this.risksColumns.next(['riskDescription']);
+        this.requirementColumns.next(['reqDescription']);
+      } else {
+        this.risksColumns.next(['riskDescription', 'riskStatus', 'editRisk', 'deleteRisk']);
+        this.requirementColumns.next(['reqDescription', 'reqType', 'reqStatus', 'trackTime', 'editReq', 'deleteReq']);
+      }
+    })
   }
 
   ngAfterViewInit(): void {
@@ -195,6 +213,46 @@ export class ProjectOverviewComponent implements OnInit {
     }
   }
 
+  showRisk(risk) {
+    if (!this.isHandset()) {
+      return;
+    }
+    const dialogRef = this.dialog.open(MobileRiskViewModalComponent, {
+      data: risk
+    });
+
+    dialogRef.componentInstance.onDelete.subscribe(d => {
+      this.deleteRisk(d, dialogRef);
+    });
+
+    dialogRef.componentInstance.onEdit.subscribe(d => {
+      this.doEditRisk(d);
+      dialogRef.close();
+    });
+  }
+
+  showRequirement(req) {
+    if (!this.isHandset()) {
+      return;
+    }
+    const dialogRef = this.dialog.open(MobileRequirementViewModalComponent, {
+      data: req
+    });
+
+    dialogRef.componentInstance.onDelete.subscribe(d => {
+      this.deleteRequirement(d, dialogRef);
+    });
+
+    dialogRef.componentInstance.onEdit.subscribe(d => {
+      this.doEditRequirement(d);
+      dialogRef.close();
+    });
+
+    dialogRef.componentInstance.onTimeTrack.subscribe(d => {
+      this.trackTime(d);
+    })
+  }
+
   // CRUD for risks
 
   editRisk(risk) {
@@ -203,17 +261,21 @@ export class ProjectOverviewComponent implements OnInit {
     })
     dialogRef.afterClosed().subscribe(x => {
       if (x) {
-        this.project.risks.forEach((r: Risk, i) => {
-          if (r.riskId === x.riskId) {
-            this.project.risks[i] = x;
-          }
-        });
-        this.updateProject();
+        this.doEditRisk(x);
       }
     });
   }
 
-  deleteRisk(risk) {
+  doEditRisk(risk) {
+    this.project.risks.forEach((r: Risk, i) => {
+      if (r.riskId === risk.riskId) {
+        this.project.risks[i] = risk;
+      }
+    });
+    this.updateProject();
+  }
+
+  deleteRisk(risk, otherDialog?: MatDialogRef<any, any>) {
     const dialogRef = this.dialog.open(ConfirmModalComponent, {
       data: {
         title: 'Delete risk',
@@ -229,6 +291,9 @@ export class ProjectOverviewComponent implements OnInit {
           }
         });
         this.updateProject();
+        if (otherDialog) {
+          otherDialog.close();
+        }
       }
     });
   }
@@ -251,17 +316,21 @@ export class ProjectOverviewComponent implements OnInit {
     })
     dialogRef.afterClosed().subscribe(x => {
       if (x) {
-        this.project.requirements.forEach((r: Requirement, i) => {
-          if (r.reqId === req.reqId) {
-            this.project.requirements[i] = x;
-          }
-        });
-        this.updateProject();
+        this.doEditRequirement(x);
       }
     })
   }
 
-  deleteRequirement(req) {
+  doEditRequirement(req) {
+    this.project.requirements.forEach((r: Requirement, i) => {
+      if (r.reqId === req.reqId) {
+        this.project.requirements[i] = req;
+      }
+    });
+    this.updateProject();
+  }
+
+  deleteRequirement(req, otherDialog?: MatDialogRef<any, any>) {
     const dialogRef = this.dialog.open(ConfirmModalComponent, {
       data: {
         title: 'Delete risk',
@@ -277,6 +346,9 @@ export class ProjectOverviewComponent implements OnInit {
           }
         });
         this.updateProject();
+        if (otherDialog) {
+          otherDialog.close();
+        }
       }
     });
   }
@@ -296,30 +368,37 @@ export class ProjectOverviewComponent implements OnInit {
     const dialogRef = this.dialog.open(TimeTrackerModalComponent, {
       data: {
         requirement: requirement
-      }
+      },
+      maxWidth: '90vw !important'
     });
 
     dialogRef.afterClosed().subscribe(x => {
-      let changes = false;
-      x.requirement.phases.forEach((p, i) => {
-        if (x.addedHours[p.phase]) {
-          changes = true;
-          x.requirement.phases[i].expendedHours += x.addedHours[p.phase];
-        }
-      });
-      if (changes) {
-        this.project.requirements.forEach((r: Requirement, i) => {
-          if (r.reqId === x.requirement.reqId) {
-            this.project.requirements[i] = x.requirement;
+      if (x) {
+        let changes = false;
+        x.requirement.phases.forEach((p, i) => {
+          if (x.addedHours[p.phase]) {
+            changes = true;
+            x.requirement.phases[i].expendedHours += x.addedHours[p.phase];
           }
         });
-        this.updateProject();
+        if (changes) {
+          this.project.requirements.forEach((r: Requirement, i) => {
+            if (r.reqId === x.requirement.reqId) {
+              this.project.requirements[i] = x.requirement;
+            }
+          });
+          this.updateProject();
+        }
       }
-    })
+    });
 
   }
 
   // Utility
+
+  isHandset() {
+    return this.bpo.isMatched(Breakpoints.Handset);
+  }
 
   stringify(s) {
     return JSON.stringify(s);
@@ -424,6 +503,7 @@ export class AddRequirementModalComponent {
 export class EditRequirementModalComponent {
 
   editRequirementForm = this.fb.group({
+    reqId: [this.data.reqId],
     description: [this.data.description, Validators.required],
     type: [this.data.type, Validators.required],
     currentPhase: [this.data.currentPhase, Validators.required],
@@ -469,6 +549,75 @@ export class TimeTrackerModalComponent {
       requirement: this.data.requirement,
       addedHours: this.editValueHolder
     }
+  }
+
+}
+
+@Component({
+  selector: 'mobile-risk-view-modal',
+  templateUrl: 'mobile-risk-view-modal.component.html',
+  styleUrls: ['./project-overview.component.scss']
+})
+export class MobileRiskViewModalComponent {
+
+  title: string = 'View Risk'
+  editMode: boolean = false;
+
+  editRiskForm = this.fb.group({
+    riskId: [this.data.riskId],
+    description: [this.data.description, Validators.required],
+    status: [this.data.status, Validators.required]
+  })
+
+  onEdit: EventEmitter<any> = new EventEmitter();
+  onDelete: EventEmitter<any> = new EventEmitter();
+
+  statuses = RiskStatus;
+
+  constructor(private fb: FormBuilder, @Inject(MAT_DIALOG_DATA) public data) { }
+
+  originalOrder = (a: KeyValue<number, string>, b: KeyValue<number, string>): number => {
+    return 0;
+  }
+
+  resetForm() {
+    this.editRiskForm.reset({ riskId: this.data.riskId, description: this.data.description, status: this.data.status });
+  }
+}
+
+@Component({
+  selector: 'mobile-requirement-view-modal',
+  templateUrl: 'mobile-requirement-view-modal.component.html',
+  styleUrls: ['./project-overview.component.scss']
+})
+export class MobileRequirementViewModalComponent {
+
+  title: string = 'View Risk'
+  editMode: boolean = false;
+
+  editRequirementForm = this.fb.group({
+    reqId: [this.data.reqId],
+    description: [this.data.description, Validators.required],
+    type: [this.data.type, Validators.required],
+    currentPhase: [this.data.currentPhase, Validators.required],
+    dueAt: [0]
+  })
+
+  onTimeTrack: EventEmitter<any> = new EventEmitter();
+  onEdit: EventEmitter<any> = new EventEmitter();
+  onDelete: EventEmitter<any> = new EventEmitter();
+
+  reqTypes = RequirementType;
+  reqPhases = RequirementPhase;
+
+  constructor(private fb: FormBuilder, @Inject(MAT_DIALOG_DATA) public data) { }
+
+  originalOrder = (a: KeyValue<number, string>, b: KeyValue<number, string>): number => {
+    return 0;
+  }
+
+  resetForm() {
+    this.editRequirementForm.reset({ riskId: this.data.riskId, description: this.data.description, status: this.data.status });
   }
 
 }

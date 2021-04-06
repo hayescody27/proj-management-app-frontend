@@ -1,0 +1,52 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport [mode]="'over'">
+    <mat-toolbar color="primary">Menu</mat-toolbar>
+    <mat-nav-list>
+      <a mat-list-item routerLink="/my-projects" (click)="drawer.close()">
+        <mat-icon>work_outline</mat-icon>&nbsp;My Projects
+      </a>
+      <a mat-list-item routerLink="/new-project" (click)="drawer.close()">
+        <mat-icon>add</mat-icon>&nbsp;New Project
+      </a>
+      <a mat-list-item routerLink="/project-tracking" (click)="drawer.close()">
+        <i class="material-icons material-icons-round">bar_chart</i>&nbsp;Project Tracking
+      </a>
+      <span style="flex: 1 1 auto;"></span>
+      <a mat-list-item (click)="userSvc.logout(); drawer.close()">
+        <mat-icon>logout</mat-icon> Logout
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" *ngIf="(isHandset$ | async) && (userSvc.loggedIn | async) && (userSvc.validProfile | async)">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <div *ngIf="((isHandset$ | async) === false) && (userSvc.loggedIn | async) && (userSvc.validProfile | async)" style="display: flex; width: 100%;">
+        <span>
+          <button mat-button routerLink="/my-projects">
+            <mat-icon>work_outline</mat-icon> My Projects
+          </button>
+        </span>
+        <span>
+          <button mat-button routerLink="/new-project">
+            <mat-icon>add</mat-icon> New Project
+          </button>
+        </span>
+        <span>
+          <button mat-button routerLink="/project-tracking">
+            <i class="material-icons material-icons-round">bar_chart</i> Project Tracking
+          </button>
+        </span>
+        <span style="flex: 1 1 auto;"></span>
+        <span>
+          <button mat-button (click)="userSvc.logout()">
+            <mat-icon>logout</mat-icon> Logout
+          </button>
+        </span>
+      </div>
+    </mat-toolbar>
+    <!-- Add Content Here -->
+    <ng-content></ng-content>
+  </mat-sidenav-content>
+</mat-sidenav-container>

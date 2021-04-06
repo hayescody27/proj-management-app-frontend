@@ -1,27 +1,3 @@
-<mat-toolbar color="primary">
-  <div *ngIf="(userSvc.loggedIn | async) && (userSvc.validProfile | async)" style="width: 100%; display: flex;">
-    <span>
-      <button mat-button routerLink="/my-projects">
-        <mat-icon>work</mat-icon> My Projects
-      </button>
-    </span>
-    <span>
-      <button mat-button routerLink="/new-project">
-        <mat-icon>add</mat-icon> New Project
-      </button>
-    </span>
-    <span>
-      <button mat-button routerLink="/project-tracking">
-        <mat-icon>bar_chart</mat-icon> Project Tracking
-      </button>
-    </span>
-    <span style="flex: 1 1 auto;"></span>
-    <span>
-      <button mat-button (click)="userSvc.logout()">
-        <mat-icon>logout</mat-icon> Logout
-      </button>
-    </span>
-  </div>
-</mat-toolbar>
-<router-outlet></router-outlet>
-<progress-overlay></progress-overlay>
+<main-nav>
+  <router-outlet></router-outlet>
+</main-nav>
