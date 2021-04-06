@@ -19,6 +19,10 @@ export class ProjectService {
     return this.http.post(`${this.baseUrl}`, project);
   }
 
+  deleteProject(id) {
+    return this.http.delete(`${this.baseUrl}/${id}`);
+  }
+
   openProject(project: Project) {
     this.projectOverviewPlaceholder = project;
     this.router.navigate(['/project-overview']);

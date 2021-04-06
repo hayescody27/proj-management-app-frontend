@@ -21,6 +21,7 @@ import { RiskStatus } from 'src/app/entities/risk-status.enum';
 import { TeamMember } from 'src/app/entities/team-member';
 import { ProjectService } from 'src/app/services/project-service.service';
 import { UserService } from 'src/app/services/user-service.service';
+import { ConfirmModalComponent } from '../confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-project-overview',
@@ -278,7 +279,7 @@ export class ProjectOverviewComponent implements OnInit {
   deleteRisk(risk, otherDialog?: MatDialogRef<any, any>) {
     const dialogRef = this.dialog.open(ConfirmModalComponent, {
       data: {
-        title: 'Delete risk',
+        title: 'Delete Risk',
         message: 'Are you sure?'
       }
     })
@@ -333,7 +334,7 @@ export class ProjectOverviewComponent implements OnInit {
   deleteRequirement(req, otherDialog?: MatDialogRef<any, any>) {
     const dialogRef = this.dialog.open(ConfirmModalComponent, {
       data: {
-        title: 'Delete risk',
+        title: 'Delete Requirement',
         message: 'Are you sure?'
       }
     })
@@ -456,17 +457,6 @@ export class EditRiskModalComponent {
   originalOrder = (a: KeyValue<number, string>, b: KeyValue<number, string>): number => {
     return 0;
   }
-
-}
-
-@Component({
-  selector: 'confirm-modal',
-  templateUrl: 'confirm-modal.component.html',
-  styleUrls: ['./project-overview.component.scss']
-})
-export class ConfirmModalComponent {
-
-  constructor(private fb: FormBuilder, @Inject(MAT_DIALOG_DATA) public data) { }
 
 }
 
