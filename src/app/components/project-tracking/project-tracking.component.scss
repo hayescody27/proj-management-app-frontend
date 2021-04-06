@@ -2,11 +2,9 @@
     display: flex; 
     flex-flow: column; 
     height: calc(100vh - 64px);
+    max-width: 100vw;
+    overflow-x: auto;
     padding: 0px 20px;
-}
-
-.title {
-    flex: 0 1 auto;
 }
 
 .content {
@@ -17,11 +15,25 @@
     flex: 1 1 auto;
 }
 
+.requirementDetails {
+    display: flex;
+    align-items: center;
+}
+
+.requirementDetailFields {
+    display: flex; 
+    flex-flow: column wrap;
+}
+
+.charts {
+    max-width: 100%; 
+    overflow-x: auto;
+}
+
 mat-form-field {
     min-width: 20em;
     max-width: 20em;
 }
-
 
 mat-label {
     font-size: large;
@@ -33,4 +45,33 @@ textarea {
   
 textarea.mat-input-element {
     resize: none;
+}
+
+@media only screen and (max-width: 850px) {
+
+    .wrapper {
+        max-width: calc(95vw);
+        padding: 0px 2%;
+        overflow-x: hidden;
+    }
+
+    .requirementDetails {
+        flex-flow: column wrap;
+        max-width: 95vw;
+        align-items: center;
+    }
+
+    .requirementDetailFields {
+        display: unset; 
+        flex-flow: unset;
+    }
+
+    textarea {
+        height: 15vh;
+    }
+
+    mat-form-field {
+        min-width: 100%;
+        max-width: 100%;
+    }
 }

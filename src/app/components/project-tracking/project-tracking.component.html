@@ -1,9 +1,9 @@
 <div class="wrapper">
-    <page-title pageTitle='Project Tracking' class="title"></page-title>
+    <page-title pageTitle='Project Tracking'></page-title>
 
-    <div class="content">
+    <div class="content" #containerRef>
         <div>
-            <form [formGroup]="projectSelectForm" class="form" (ngSubmit)="changeSelection()">
+            <form [formGroup]="projectSelectForm" class="form">
                 <mat-form-field appearance="outline" style="margin-right: 10px;">
                     <mat-label>Project</mat-label>
                     <mat-select formControlName="project">
@@ -24,8 +24,8 @@
             <mat-slide-toggle [formControl]="detailSelect" color="primary">Detailed View
             </mat-slide-toggle>
         </div>
-        <div style="display: flex;" *ngIf="projectSelectForm.valid">
-            <div>
+        <div class="requirementDetails" *ngIf="projectSelectForm.valid">
+            <div class="requirementDetailFields">
                 <mat-form-field appearance="outline">
                     <mat-label>Description</mat-label>
                     <textarea matInput [(ngModel)]="selectedRequirement.description" readonly></textarea>
@@ -41,15 +41,15 @@
                     <input matInput [(ngModel)]="selectedRequirement.currentPhase" readonly>
                 </mat-form-field>
             </div>
-            <div>
-                <ngx-charts-pie-chart *ngIf="!detailSelect.value" [view]="view" [scheme]="colorScheme" [results]="pieData" [gradient]="gradient" [legend]="showLegend" [legendPosition]="legendPosition"
-                    [labels]="showLabels" [doughnut]="true" [trimLabels]="trimLabels" [legendTitle]="legendTitle">
+            <div class="charts">
+                <ngx-charts-pie-chart *ngIf="!detailSelect.value" [view]="pieView" [scheme]="colorScheme" [results]="pieData" [gradient]="gradient" [legend]="showLegend"
+                    [legendPosition]="legendPosition" [labels]="showLabels" [doughnut]="true" [trimLabels]="trimLabels" [legendTitle]="legendTitle">
                     <ng-template #tooltipTemplate let-model="model">
                         <h4>{{model.name}}</h4>
                         <h5>{{model.value}} hrs</h5>
                     </ng-template>
                 </ngx-charts-pie-chart>
-                <ngx-charts-pie-grid *ngIf="detailSelect.value" [view]="view" [scheme]="colorScheme" [results]="pieData" [maxLabelLength]="30">
+                <ngx-charts-pie-grid *ngIf="detailSelect.value" [view]="detailedView" [scheme]="colorScheme" [results]="pieData" [maxLabelLength]="30">
                     <ng-template #tooltipTemplate let-model="model">
                         <h4>{{model.name}}</h4>
                         <h5>{{model.value}} hrs</h5>
