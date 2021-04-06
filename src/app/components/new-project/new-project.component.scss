@@ -1,0 +1,80 @@
+
+.wrapper {
+    padding: 0px 2%;
+    width: 96%;
+    display: flex;
+    justify-content: center;
+}
+
+mat-card {
+    display: flex; 
+    flex-flow: column; 
+    justify-content: center;
+    max-width: 550px;
+    width: 100%;
+}
+
+mat-card-title {
+  margin-bottom: 15px;
+}
+
+.projectForm {
+  
+}
+
+// project desc text area
+
+.projectDescription {
+    overflow: auto;
+}
+
+.projectDescription::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+.projectDescription::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 50px white;
+    border-radius: 10px;
+}
+
+.projectDescription::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    box-shadow: inset 0 0 50px #673ab7;
+}
+
+// end project desc text area
+
+// globals
+
+mat-form-field {
+  min-width: 100%;
+  max-width: 100%;
+}
+
+mat-label {
+  font-size: large;
+}
+
+textarea {
+  height: 7.5vh;
+}
+
+textarea.mat-input-element {
+  resize: none;
+}
+
+
+@media only screen and (max-width: 850px) {
+  .projectForm {
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+  }
+
+  textarea {
+    height: 15vh;
+  }
+}
+
+  
+  
