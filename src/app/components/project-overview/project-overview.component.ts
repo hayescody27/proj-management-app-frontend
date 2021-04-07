@@ -590,7 +590,7 @@ export class MobileRequirementViewModalComponent {
     description: [this.data.description, Validators.required],
     type: [this.data.type, Validators.required],
     currentPhase: [this.data.currentPhase, Validators.required],
-    dueAt: [0]
+    dueAt: [this.data.dueAt]
   })
 
   onTimeTrack: EventEmitter<any> = new EventEmitter();
@@ -607,7 +607,7 @@ export class MobileRequirementViewModalComponent {
   }
 
   resetForm() {
-    this.editRequirementForm.reset({ riskId: this.data.riskId, description: this.data.description, status: this.data.status });
+    this.editRequirementForm.reset({ reqId: this.data.reqId, description: this.data.description, type: this.data.type, currentPhase: this.data.currentPhase, dueAt: this.data.dueAt });
   }
 
 }
