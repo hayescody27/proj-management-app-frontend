@@ -12,8 +12,14 @@
         <i class="material-icons material-icons-round">bar_chart</i>&nbsp;Project Tracking
       </a>
       <span style="flex: 1 1 auto;"></span>
+      <a mat-list-item *ngIf="(darkMode | async)" (click)="darkMode.next(false)">
+        <mat-icon>dark_mode</mat-icon>&nbsp;Dark Mode
+      </a>
+      <a mat-list-item *ngIf="!(darkMode | async)" (click)="darkMode.next(true)">
+        <i class="material-icons material-icons-outlined">dark_mode</i>&nbsp;Dark Mode
+      </a>
       <a mat-list-item (click)="userSvc.logout(); drawer.close()">
-        <mat-icon>logout</mat-icon> Logout
+        <mat-icon>logout</mat-icon>&nbsp;Logout
       </a>
     </mat-nav-list>
   </mat-sidenav>
@@ -40,9 +46,25 @@
         </span>
         <span style="flex: 1 1 auto;"></span>
         <span>
-          <button mat-button (click)="userSvc.logout()">
-            <mat-icon>logout</mat-icon> Logout
+          <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>settings</mat-icon>
           </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="darkMode.next(false); $event.stopPropagation();" *ngIf="(darkMode | async)">
+              <mat-icon>dark_mode</mat-icon>
+              <span>Dark Mode</span>
+            </button>
+            <button mat-menu-item (click)="darkMode.next(true); $event.stopPropagation();" *ngIf="!(darkMode | async)">
+              <i class="material-icons material-icons-outlined">dark_mode</i>
+              <span>Dark Mode</span>
+            </button>
+            <button mat-menu-item (click)="userSvc.logout()">
+              <mat-icon>logout</mat-icon>
+              <span>
+                Logout
+              </span>
+            </button>
+          </mat-menu>
         </span>
       </div>
     </mat-toolbar>

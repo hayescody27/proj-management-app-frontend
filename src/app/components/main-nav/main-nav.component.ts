@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Renderer2 } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/user-service.service';
@@ -18,15 +18,34 @@ export class MainNavComponent {
       shareReplay()
     );
 
+  darkMode: Subject<boolean> = new Subject<boolean>();
   showMenu: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-  constructor(private breakpointObserver: BreakpointObserver, public userSvc: UserService, private router: Router) {
+  constructor(private breakpointObserver: BreakpointObserver, public userSvc: UserService, private router: Router, private renderer: Renderer2) {
     this.userSvc.loggedIn.subscribe(l => {
       if (!l) {
         this.router.navigate(['/login']);
       }
     });
 
+    this.darkMode.subscribe(x => {
+      if (x) {
+        this.renderer.addClass(document.body, 'dark-theme');
+        this.renderer.removeClass(document.body, 'light-theme');
+      } else {
+        this.renderer.addClass(document.body, 'light-theme');
+        this.renderer.removeClass(document.body, 'dark-theme');
+      }
+    })
+
+    let theme = localStorage.getItem('theme');
+
+    if (theme != null) {
+      this.darkMode.next(theme === 'dark');
+    } else {
+      this.darkMode.next(false);
+      localStorage.setItem('theme', 'light');
+    }
 
     this.userSvc.profileInfo.subscribe(p => {
       if (p) {

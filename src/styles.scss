@@ -1,4 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
+@import "./theme";
 
 html, body { height: 100%; }
 body { 
@@ -40,5 +41,10 @@ body {
 
 .mat-toolbar.mat-primary {
     z-index: 99999 !important;
+}
+
+.mat-menu-item i {
+    vertical-align: middle;
+    margin-right: 16px;
 }
 
