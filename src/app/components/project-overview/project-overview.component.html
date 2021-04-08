@@ -46,7 +46,7 @@
         <div class="innerTableContainer mat-elevation-z5">
             <table mat-table [dataSource]="riskDataSource" class="fullWidth">
                 <ng-container matColumnDef="tableTitle">
-                    <th mat-header-cell *matHeaderCellDef colspan="4" class="tableHeader">
+                    <th mat-header-cell *matHeaderCellDef colspan="5" class="tableHeader">
                         <div class="tableTitle">
                             <div>
                                 Project Risks
@@ -62,10 +62,16 @@
                     </th>
                 </ng-container>
 
+                <!-- Id Column -->
+                <ng-container matColumnDef="riskId">
+                    <th mat-header-cell *matHeaderCellDef> {{ (isHandset$ | async) ? 'Risk ID (Click to view)' : 'Risk ID'}} </th>
+                    <td mat-cell *matCellDef="let risk" (click)="showRisk(risk)"> {{risk.riskId}} </td>
+                </ng-container>
+
                 <!-- Description Column -->
                 <ng-container matColumnDef="riskDescription">
-                    <th mat-header-cell *matHeaderCellDef> {{ (isHandset$ | async) ? 'Description (Click to view)' : 'Description'}} </th>
-                    <td mat-cell *matCellDef="let risk" (click)="showRisk(risk)"> {{risk.description}} </td>
+                    <th mat-header-cell *matHeaderCellDef> Description </th>
+                    <td mat-cell *matCellDef="let risk"> {{risk.description}} </td>
                 </ng-container>
 
                 <!-- Status Column -->
@@ -102,7 +108,7 @@
             <table mat-table [dataSource]="reqDataSource" class="fullWidth">
 
                 <ng-container matColumnDef="tableTitle">
-                    <th mat-header-cell *matHeaderCellDef colspan="6" class="tableHeader">
+                    <th mat-header-cell *matHeaderCellDef colspan="7" class="tableHeader">
                         <div class="tableTitle">
                             <div>
                                 Project Requirements
@@ -118,9 +124,15 @@
                     </th>
                 </ng-container>
 
+                <!-- Id Column -->
+                <ng-container matColumnDef="reqId">
+                    <th mat-header-cell *matHeaderCellDef> {{ (isHandset$ | async) ? 'Req ID (Click to view)' : 'Req ID'}} </th>
+                    <td mat-cell *matCellDef="let req" (click)="showRequirement(req)"> {{req.reqId}} </td>
+                </ng-container>
+
                 <!-- Description Column -->
                 <ng-container matColumnDef="reqDescription">
-                    <th mat-header-cell *matHeaderCellDef> {{ (isHandset$ | async) ? 'Description (Click to view)' : 'Description'}} </th>
+                    <th mat-header-cell *matHeaderCellDef> Description </th>
                     <td mat-cell *matCellDef="let req" (click)="showRequirement(req)"> {{req.description}} </td>
                 </ng-container>
 

@@ -66,11 +66,11 @@ export class ProjectOverviewComponent implements OnInit {
 
     this.isHandset$.subscribe(x => {
       if (x) {
-        this.risksColumns.next(['riskDescription']);
-        this.requirementColumns.next(['reqDescription']);
+        this.risksColumns.next(['riskId']);
+        this.requirementColumns.next(['reqId']);
       } else {
-        this.risksColumns.next(['riskDescription', 'riskStatus', 'editRisk', 'deleteRisk']);
-        this.requirementColumns.next(['reqDescription', 'reqType', 'reqStatus', 'trackTime', 'editReq', 'deleteReq']);
+        this.risksColumns.next(['riskId', 'riskDescription', 'riskStatus', 'editRisk', 'deleteRisk']);
+        this.requirementColumns.next(['reqId', 'reqDescription', 'reqType', 'reqStatus', 'trackTime', 'editReq', 'deleteReq']);
       }
     })
   }
@@ -607,7 +607,7 @@ export class MobileRiskViewModalComponent {
 })
 export class MobileRequirementViewModalComponent {
 
-  title: string = 'View Risk'
+  title: string = 'View Requirement'
   editMode: boolean = false;
 
   editRequirementForm = this.fb.group({
