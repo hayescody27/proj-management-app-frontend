@@ -52,7 +52,7 @@
                                 Project Risks
                             </div>
                             <span class="spacer"></span>
-                            <button mat-stroked-button (click)="addRisk()" class="black" *ngIf="!(isHandset$ | async)">
+                            <button mat-raised-button (click)="addRisk()" *ngIf="!(isHandset$ | async)" color="primary">
                                 <mat-icon>add</mat-icon> Add Risk
                             </button>
                             <button mat-mini-fab color="primary" (click)="addRisk()" *ngIf="(isHandset$ | async)">
@@ -108,7 +108,7 @@
                                 Project Requirements
                             </div>
                             <span class="spacer"></span>
-                            <button mat-stroked-button (click)="addRequirement()" class="black" *ngIf="!(isHandset$ | async)">
+                            <button mat-raised-button (click)="addRequirement()" *ngIf="!(isHandset$ | async)" color="primary">
                                 <mat-icon>add</mat-icon> Add Requirement
                             </button>
                             <button mat-mini-fab color="primary" (click)="addRequirement()" *ngIf="(isHandset$ | async)">
