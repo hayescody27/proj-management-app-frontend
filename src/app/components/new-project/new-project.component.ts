@@ -28,7 +28,14 @@ export class NewProjectComponent implements OnInit {
       this.projSvc.openProject(x);
 
     }, err => {
-      this.snackBar.open(err.error.message[0], null, {
+      let msg = '';
+      if (err.error.message instanceof Array) {
+        msg = msg[0];
+      } else {
+        msg = err.error.message;
+      }
+
+      this.snackBar.open(msg, null, {
         duration: 3000,
         horizontalPosition: 'center',
         verticalPosition: 'top',

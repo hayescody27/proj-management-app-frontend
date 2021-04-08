@@ -49,7 +49,13 @@ export class MyProjectsComponent implements OnInit {
         this.projectSvc.deleteProject(project._id).subscribe(x => {
           this.getProjects();
         }, err => {
-          this.snackBar.open(err.error.message[0], null, {
+          let msg = '';
+          if (err.error.message instanceof Array) {
+            msg = msg[0];
+          } else {
+            msg = err.error.message;
+          }
+          this.snackBar.open(msg, null, {
             duration: 3000,
             horizontalPosition: 'center',
             verticalPosition: 'top',

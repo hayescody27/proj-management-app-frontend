@@ -22,6 +22,7 @@ import { TeamMember } from 'src/app/entities/team-member';
 import { ProjectService } from 'src/app/services/project-service.service';
 import { UserService } from 'src/app/services/user-service.service';
 import { ConfirmModalComponent } from '../confirm-modal/confirm-modal.component';
+import { ProjectOwnerPipe } from 'src/app/utility/project-owner.pipe';
 
 @Component({
   selector: 'app-project-overview',
@@ -76,7 +77,6 @@ export class ProjectOverviewComponent implements OnInit {
 
   ngAfterViewInit(): void {
     this.projectName.nativeElement.addEventListener('focusout', () => {
-      console.log('focusout');
       if (this.project.name !== this.projectDetails.get('projectName').value) {
         // Update
         this.project.name = this.projectDetails.get('projectName').value;
@@ -93,19 +93,23 @@ export class ProjectOverviewComponent implements OnInit {
   }
 
   setProject() {
-    let initProjOwner = '';
-    this.project.members.forEach(mem => {
-      if (mem.uid === this.project.owner) {
-        initProjOwner = mem.displayName;
-      }
-    })
     this.projectDetails = this.fb.group({
       projectName: [this.project.name],
       projectDescription: [this.project.description],
-      projectOwner: [initProjOwner]
+      projectOwner: [this.findProjectOwner()]
     });
     this.riskDataSource.data = this.project.risks;
     this.reqDataSource.data = this.project.requirements;
+  }
+
+  findProjectOwner(): string {
+    let projOwner = '';
+    this.project.members.forEach(mem => {
+      if (mem.uid === this.project.owner) {
+        projOwner = mem.displayName;
+      }
+    });
+    return projOwner;
   }
 
   updateProject(skipOwnerCheck?: boolean) {
@@ -124,7 +128,14 @@ export class ProjectOverviewComponent implements OnInit {
   }
 
   handleUpdateProjectError(err) {
-    this.snackBar.open(err.error.message[0], null, {
+    let msg = '';
+    if (err.error.message instanceof Array) {
+      msg = msg[0];
+    } else {
+      msg = err.error.message;
+    }
+
+    this.snackBar.open(msg, null, {
       duration: 3000,
       horizontalPosition: 'center',
       verticalPosition: 'top',
@@ -149,11 +160,25 @@ export class ProjectOverviewComponent implements OnInit {
   }
 
   updateProjectOwner(event: MatAutocompleteSelectedEvent) {
-    let newOwner: TeamMember = JSON.parse(event.option.value);
-    this.project.owner = newOwner.uid;
-    this.projectDetails.get('projectOwner').setValue(newOwner.displayName);
     this.blur('projectOwner');
-    this.updateProject(true);
+    let newOwner: TeamMember = JSON.parse(event.option.value);
+    this.projectDetails.get('projectOwner').setValue(newOwner.displayName);
+
+    const dialogRef = this.dialog.open(ConfirmModalComponent, {
+      data: {
+        title: 'Change Project Manager',
+        message: `Are you sure you want to change the project manager to ${newOwner.displayName}?`
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(x => {
+      if (x) {
+        this.project.owner = newOwner.uid;
+        this.updateProject(true);
+      } else {
+        this.projectDetails.get('projectOwner').setValue(this.findProjectOwner());
+      }
+    });
   }
 
   // team member related methods
