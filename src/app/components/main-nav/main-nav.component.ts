@@ -4,6 +4,7 @@ import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/user-service.service';
+import { setupTestingRouter } from '@angular/router/testing';
 
 @Component({
   selector: 'main-nav',
@@ -18,8 +19,8 @@ export class MainNavComponent {
       shareReplay()
     );
 
-  darkMode: Subject<boolean> = new Subject<boolean>();
   showMenu: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  isDark: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(localStorage.getItem('theme') === 'dark');
 
   constructor(private breakpointObserver: BreakpointObserver, public userSvc: UserService, private router: Router, private renderer: Renderer2) {
     this.userSvc.loggedIn.subscribe(l => {
@@ -27,25 +28,6 @@ export class MainNavComponent {
         this.router.navigate(['/login']);
       }
     });
-
-    this.darkMode.subscribe(x => {
-      if (x) {
-        this.renderer.addClass(document.body, 'dark-theme');
-        this.renderer.removeClass(document.body, 'light-theme');
-      } else {
-        this.renderer.addClass(document.body, 'light-theme');
-        this.renderer.removeClass(document.body, 'dark-theme');
-      }
-    })
-
-    let theme = localStorage.getItem('theme');
-
-    if (theme != null) {
-      this.darkMode.next(theme === 'dark');
-    } else {
-      this.darkMode.next(false);
-      localStorage.setItem('theme', 'light');
-    }
 
     this.userSvc.profileInfo.subscribe(p => {
       if (p) {
@@ -63,7 +45,23 @@ export class MainNavComponent {
 
     combineLatest([this.userSvc.loggedIn, this.userSvc.validProfile]).subscribe(([li, vp]) => {
       this.showMenu.next(li && vp);
+    });
+
+    this.isDark.subscribe(x => {
+      this.setTheme(x);
     })
+  }
+
+  setTheme(isDark) {
+    if (isDark) {
+      this.renderer.addClass(document.body, 'dark-theme');
+      this.renderer.removeClass(document.body, 'light-theme');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      this.renderer.addClass(document.body, 'light-theme');
+      this.renderer.removeClass(document.body, 'dark-theme');
+      localStorage.setItem('theme', 'light');
+    }
   }
 
 }

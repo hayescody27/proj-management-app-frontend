@@ -12,10 +12,10 @@
         <i class="material-icons material-icons-round">bar_chart</i>&nbsp;Project Tracking
       </a>
       <span style="flex: 1 1 auto;"></span>
-      <a mat-list-item *ngIf="(darkMode | async)" (click)="darkMode.next(false)">
+      <a mat-list-item *ngIf="(isDark | async)" (click)="isDark.next(false)">
         <mat-icon>dark_mode</mat-icon>&nbsp;Dark Mode
       </a>
-      <a mat-list-item *ngIf="!(darkMode | async)" (click)="darkMode.next(true)">
+      <a mat-list-item *ngIf="!(isDark | async)" (click)="isDark.next(true)">
         <i class="material-icons material-icons-outlined">dark_mode</i>&nbsp;Dark Mode
       </a>
       <a mat-list-item (click)="userSvc.logout(); drawer.close()">
@@ -50,14 +50,18 @@
             <mat-icon>settings</mat-icon>
           </button>
           <mat-menu #menu="matMenu">
-            <button mat-menu-item (click)="darkMode.next(false); $event.stopPropagation();" *ngIf="(darkMode | async)">
-              <mat-icon>dark_mode</mat-icon>
-              <span>Dark Mode</span>
-            </button>
-            <button mat-menu-item (click)="darkMode.next(true); $event.stopPropagation();" *ngIf="!(darkMode | async)">
-              <i class="material-icons material-icons-outlined">dark_mode</i>
-              <span>Dark Mode</span>
-            </button>
+            <ng-container *ngIf="!(isDark | async); else dark">
+              <button mat-menu-item (click)="isDark.next(true); $event.stopPropagation();">
+                <i class="material-icons material-icons-outlined">dark_mode</i>
+                <span>Dark Mode</span>
+              </button>
+            </ng-container>
+            <ng-template #dark>
+              <button mat-menu-item (click)="isDark.next(false); $event.stopPropagation();">
+                <mat-icon>dark_mode</mat-icon>
+                <span>Dark Mode</span>
+              </button>
+            </ng-template>
             <button mat-menu-item (click)="userSvc.logout()">
               <mat-icon>logout</mat-icon>
               <span>
