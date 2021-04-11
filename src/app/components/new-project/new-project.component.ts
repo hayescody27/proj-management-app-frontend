@@ -30,7 +30,7 @@ export class NewProjectComponent implements OnInit {
     }, err => {
       let msg = '';
       if (err.error.message instanceof Array) {
-        msg = msg[0];
+        msg = err.error.message[0];
       } else {
         msg = err.error.message;
       }
