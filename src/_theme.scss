@@ -27,5 +27,7 @@ $dark-theme: mat-dark-theme(
 
 .dark-theme {
     @include angular-material-theme($dark-theme);
+
+    .ngx-charts, text {fill: #FFF}
 }
 
