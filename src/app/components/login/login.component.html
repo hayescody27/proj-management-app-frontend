@@ -16,13 +16,11 @@
                             </mat-radio-group>
                             <mat-form-field appearance="outline">
                                 <mat-label>Username</mat-label>
-                                <input type="text" matInput [placeholder]="emailSignIn.controls['signInOption'].value"
-                                    formControlName="uid">
+                                <input type="text" matInput [placeholder]="emailSignIn.controls['signInOption'].value" formControlName="uid">
                             </mat-form-field>
                             <mat-form-field appearance="outline">
                                 <mat-label>Password</mat-label>
-                                <input [type]="hide ? 'password' : 'text'" matInput placeholder="password"
-                                    formControlName="password">
+                                <input [type]="hide ? 'password' : 'text'" matInput placeholder="password" formControlName="password">
                                 <button mat-icon-button matSuffix type="button" (click)="hide = !hide">
                                     <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                                 </button>
@@ -31,7 +29,9 @@
                                 <button mat-stroked-button type="submit" [disabled]="!emailSignIn.valid">Sign
                                     In</button>
                             </div>
-                            <mat-error *ngIf="signInErrMsg">{{signInErrMsg}}</mat-error>
+                            <div style="padding: 1em">
+                                <mat-error *ngIf="signInErrMsg">{{signInErrMsg}}</mat-error>
+                            </div>
                         </form>
                     </div>
                 </mat-tab>
@@ -48,28 +48,28 @@
                             </mat-form-field>
                             <mat-form-field appearance="outline">
                                 <mat-label>Password</mat-label>
-                                <input [type]="rPwdHide ? 'password' : 'text'" matInput placeholder="password"
-                                    formControlName="password">
+                                <input [type]="rPwdHide ? 'password' : 'text'" matInput placeholder="password" formControlName="password">
                                 <button mat-icon-button matSuffix type="button" (click)="rPwdHide = !rPwdHide">
                                     <mat-icon>{{rPwdHide ? 'visibility_off' : 'visibility'}}</mat-icon>
                                 </button>
+                                <mat-error *ngIf="emailSignUp.get('password').invalid">{{getErrorMessage('password')}}
+                                </mat-error>
                             </mat-form-field>
                             <mat-form-field appearance="outline">
                                 <mat-label>Confirm Password</mat-label>
-                                <input [type]="rConfirmPwdHide ? 'password' : 'text'" matInput
-                                    placeholder="confirm password" formControlName="confirmPassword">
-                                <button mat-icon-button matSuffix type="button"
-                                    (click)="rConfirmPwdHide = !rConfirmPwdHide">
+                                <input [type]="rConfirmPwdHide ? 'password' : 'text'" matInput placeholder="confirm password" formControlName="confirmPassword" [errorStateMatcher]="errorStateMatcher">
+                                <button mat-icon-button matSuffix type="button" (click)="rConfirmPwdHide = !rConfirmPwdHide">
                                     <mat-icon>{{rConfirmPwdHide ? 'visibility_off' : 'visibility'}}</mat-icon>
                                 </button>
-                                <mat-error *ngIf="emailSignUp.get('confirmPassword').invalid">Passwords do not match.
+                                <mat-error *ngIf="emailSignUp.get('confirmPassword').invalid || emailSignUp.hasError('passwordMatch')">{{getErrorMessage('confirmPassword')}}
                                 </mat-error>
                             </mat-form-field>
                             <div>
-                                <button mat-stroked-button type="submit"
-                                    [disabled]="!emailSignUp.valid">Register</button>
+                                <button mat-stroked-button type="submit" [disabled]="!emailSignUp.valid">Register</button>
                             </div>
-                            <mat-error *ngIf="registerErrMsg">{{registerErrMsg}}</mat-error>
+                            <div style="padding: 1em;">
+                                <mat-error *ngIf="registerErrMsg">{{registerErrMsg}}</mat-error>
+                            </div>
                         </form>
                     </div>
                 </mat-tab>

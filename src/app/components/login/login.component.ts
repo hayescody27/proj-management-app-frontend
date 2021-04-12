@@ -1,8 +1,10 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ErrorStateMatcher } from '@angular/material/core';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from 'src/app/services/user-service.service';
+import { PasswordMatchErrorStateMatcher } from 'src/app/utility/password-match-error-state-matcher';
 
 @Component({
   selector: 'app-login',
@@ -18,6 +20,7 @@ export class LoginComponent implements OnInit {
   hide: boolean = true;
   rPwdHide: boolean = true;
   rConfirmPwdHide: boolean = true;
+  errorStateMatcher: ErrorStateMatcher = new PasswordMatchErrorStateMatcher;
 
   constructor(private fb: FormBuilder, public userSvc: UserService) {
 
@@ -34,13 +37,26 @@ export class LoginComponent implements OnInit {
       username: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(22)]],
       email: ['', [Validators.email, Validators.required]],
       password: ['', [Validators.required, Validators.minLength(8)]],
-      confirmPassword: ['', [Validators.required, Validators.minLength(8), this.confirmPasswordValidator.bind(this)]]
-    })
+      confirmPassword: ['', [Validators.required, Validators.minLength(8)]]
+    }, { validators: this.confirmPasswordValidator })
   }
 
-  confirmPasswordValidator(fieldControl: FormControl) {
-    if (this.emailSignUp) {
-      return fieldControl.value === this.emailSignUp.get('password').value ? null : { error: 'Passwords do not match.' };
+  confirmPasswordValidator(group: FormGroup) {
+    return group.get('password').value === group.get('confirmPassword').value ? null : { passwordMatch: 'Passwords do not match.' };
+  }
+
+  getErrorMessage(controlName) {
+    let control = this.emailSignUp.get(controlName);
+    if (control.hasError('required')) {
+      return 'Password is required.'
+    } else if (control.hasError('minlength')) {
+      return 'Password must be at least 8 characters.'
+    } else {
+      //(controlName === 'confirmPassword' && this.emailSignUp.hasError('passwordMatch'))
+      console.log(controlName);
+      console.log(this.emailSignUp.hasError('passwordMatch'))
+      console.log('passwords do not match')
+      return 'Passwords do not match';
     }
   }
 
