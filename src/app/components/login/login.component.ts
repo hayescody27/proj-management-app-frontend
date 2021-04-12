@@ -64,7 +64,7 @@ export class LoginComponent implements OnInit {
     let creds: any = {
       password: this.emailSignIn.controls['password'].value
     };
-    creds[this.emailSignIn.controls['signInOption'].value] = this.emailSignIn.controls['uid'].value;
+    creds[this.emailSignIn.controls['signInOption'].value] = String(this.emailSignIn.controls['uid'].value).toLowerCase();
 
     this.userSvc.login(creds).subscribe(x => {
 
