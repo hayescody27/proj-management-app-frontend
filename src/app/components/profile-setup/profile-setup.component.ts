@@ -12,9 +12,10 @@ export class ProfileSetupComponent implements OnInit {
   profileSetupForm: FormGroup;
   errMsg: string = '';
 
-  constructor(private fb: FormBuilder, private userSvc: UserService) { }
+  constructor(private fb: FormBuilder, public userSvc: UserService) { }
 
   ngOnInit(): void {
+
     this.profileSetupForm = this.fb.group({
       displayName: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(30)]]
     })

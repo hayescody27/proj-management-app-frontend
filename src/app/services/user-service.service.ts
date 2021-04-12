@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import jwtDecode from 'jwt-decode';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -16,7 +17,7 @@ export class UserService {
   validProfile: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   profileInfo: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private snackBar: MatSnackBar) {
     if (this.getToken()) {
       if (!this.isTokenExpired(this.decodeToken(this.getToken()).exp)) {
         this.loggedIn.next(true);
@@ -81,6 +82,19 @@ export class UserService {
   updateProfile(profileInfo) {
     return this.http.patch(`${this.baseUrl}/users/${this.decodeToken(this.getToken()).username}`, profileInfo).subscribe(x => {
       this.profileInfo.next(x);
+    }, err => {
+      let msg = '';
+      if (err.error.message instanceof Array) {
+        msg = err.error.message[0];
+      } else {
+        msg = err.error.message;
+      }
+      this.snackBar.open(msg, null, {
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
+        panelClass: ['red-snackbar']
+      });
     })
   }
 
