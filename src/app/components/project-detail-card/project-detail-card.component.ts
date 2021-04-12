@@ -15,6 +15,9 @@ export class ProjectDetailCardComponent implements OnInit {
   onView: EventEmitter<Project> = new EventEmitter<Project>();
 
   @Output()
+  onMonitor: EventEmitter<Project> = new EventEmitter<Project>();
+
+  @Output()
   onDelete: EventEmitter<Project> = new EventEmitter<Project>();
 
   constructor() { }
@@ -24,6 +27,10 @@ export class ProjectDetailCardComponent implements OnInit {
 
   view() {
     this.onView.emit(this.project);
+  }
+
+  monitor() {
+    this.onMonitor.emit(this.project);
   }
 
   delete() {

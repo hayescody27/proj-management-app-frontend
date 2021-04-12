@@ -2,6 +2,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { Project } from 'src/app/entities/project';
 import { ProjectService } from 'src/app/services/project-service.service';
 import { UserService } from 'src/app/services/user-service.service';
@@ -18,7 +19,7 @@ export class MyProjectsComponent implements OnInit {
   projects: Project[] = [];
   selectedProject: Project;
 
-  constructor(public projectSvc: ProjectService, private dialog: MatDialog, private snackBar: MatSnackBar) {
+  constructor(public projectSvc: ProjectService, private dialog: MatDialog, private snackBar: MatSnackBar, private router: Router) {
 
   }
 
@@ -34,6 +35,10 @@ export class MyProjectsComponent implements OnInit {
 
   viewProject(project) {
     this.projectSvc.openProject(project);
+  }
+
+  monitorProject(project) {
+    this.router.navigate(['/project-tracking'], { queryParams: { id: project._id } });
   }
 
   deleteProject(project) {

@@ -1,6 +1,7 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { ProjectService } from 'src/app/services/project-service.service';
@@ -24,7 +25,6 @@ export class ProjectTrackingComponent implements OnInit {
   projectSelectForm: FormGroup;
   detailSelect: FormControl = new FormControl(false);
 
-  projects: any[] = [];
   selectedProject: any = {};
   selectedRequirement: any = {};
 
@@ -45,25 +45,22 @@ export class ProjectTrackingComponent implements OnInit {
     domain: ['#e38800', '#00e3d4', '#323ca8', '#4ac754', '#673ab7']
   };
 
-  constructor(private fb: FormBuilder, private projSvc: ProjectService, private bpo: BreakpointObserver) {
+  constructor(private fb: FormBuilder, private projSvc: ProjectService, private bpo: BreakpointObserver, private route: ActivatedRoute) {
 
   }
 
   ngOnInit(): void {
+    this.route.queryParams.subscribe(p => {
+      this.getProject(p['id']);
+    })
+
     this.projectSelectForm = this.fb.group({
-      project: ['', Validators.required],
       requirement: ['', Validators.required]
     });
 
-    this.projectSelectForm.controls['project'].valueChanges.subscribe(p => {
-      this.selectedProject = JSON.parse(p);
-    });
     this.projectSelectForm.controls['requirement'].valueChanges.subscribe(r => {
       this.pieData = this.transform(JSON.parse(r).phases);
       this.selectedRequirement = JSON.parse(r);
-    });
-    this.projSvc.getProjects().subscribe((p: any) => {
-      this.projects = p;
     });
   }
 
@@ -80,6 +77,13 @@ export class ProjectTrackingComponent implements OnInit {
       }
     });
 
+  }
+
+  getProject(id) {
+    this.projSvc.getProjectById(id).subscribe(p => {
+      this.selectedProject = p[0];
+      console.log(this.selectedProject);
+    })
   }
 
   stringify(o) {

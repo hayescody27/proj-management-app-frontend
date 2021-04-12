@@ -8,9 +8,6 @@
       <a mat-list-item routerLink="/new-project" (click)="drawer.close()">
         <mat-icon>add</mat-icon>&nbsp;New Project
       </a>
-      <a mat-list-item routerLink="/project-tracking" (click)="drawer.close()">
-        <i class="material-icons material-icons-round">bar_chart</i>&nbsp;Project Tracking
-      </a>
       <span style="flex: 1 1 auto;"></span>
       <a mat-list-item *ngIf="(isDark | async)" (click)="isDark.next(false)">
         <mat-icon>dark_mode</mat-icon>&nbsp;Dark Mode
@@ -37,11 +34,6 @@
         <span>
           <button mat-button routerLink="/new-project">
             <mat-icon>add</mat-icon> New Project
-          </button>
-        </span>
-        <span>
-          <button mat-button routerLink="/project-tracking">
-            <i class="material-icons material-icons-round">bar_chart</i> Project Tracking
           </button>
         </span>
         <span style="flex: 1 1 auto;"></span>

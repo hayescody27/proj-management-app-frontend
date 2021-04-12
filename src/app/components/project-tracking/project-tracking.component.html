@@ -4,12 +4,6 @@
     <div class="content" #containerRef>
         <div>
             <form [formGroup]="projectSelectForm" class="form">
-                <mat-form-field appearance="outline" style="margin-right: 10px;">
-                    <mat-label>Project</mat-label>
-                    <mat-select formControlName="project">
-                        <mat-option *ngFor="let proj of projects" [value]="stringify(proj)">{{proj.name}}</mat-option>
-                    </mat-select>
-                </mat-form-field>
                 <mat-form-field appearance="outline">
                     <mat-label>Requirement</mat-label>
                     <mat-select formControlName="requirement">

@@ -3,7 +3,7 @@
 <div class="component">
     <div class="wrapper">
         <ng-container *ngFor="let p of projects">
-            <project-detail-card [project]="p" (onView)="viewProject($event)" (onDelete)="deleteProject($event)"></project-detail-card>
+            <project-detail-card [project]="p" (onView)="viewProject($event)" (onMonitor)="monitorProject($event)" (onDelete)="deleteProject($event)"></project-detail-card>
         </ng-container>
     </div>
 </div>

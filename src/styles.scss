@@ -47,3 +47,8 @@ body {
     margin-right: 16px;
 }
 
+.mat-card-actions .mat-button:first-child, .mat-card-actions .mat-raised-button:first-child, .mat-card-actions .mat-stroked-button:first-child {
+    margin-left: 8px !important;
+    margin-right: 8px !important;
+}
+
