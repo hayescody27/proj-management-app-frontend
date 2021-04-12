@@ -51,11 +51,7 @@ export class LoginComponent implements OnInit {
       return 'Password is required.'
     } else if (control.hasError('minlength')) {
       return 'Password must be at least 8 characters.'
-    } else {
-      //(controlName === 'confirmPassword' && this.emailSignUp.hasError('passwordMatch'))
-      console.log(controlName);
-      console.log(this.emailSignUp.hasError('passwordMatch'))
-      console.log('passwords do not match')
+    } else if (controlName === 'confirmPassword' && this.emailSignUp.hasError('passwordMatch')) {
       return 'Passwords do not match';
     }
   }

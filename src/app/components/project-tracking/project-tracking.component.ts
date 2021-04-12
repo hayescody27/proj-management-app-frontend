@@ -82,7 +82,6 @@ export class ProjectTrackingComponent implements OnInit {
   getProject(id) {
     this.projSvc.getProjectById(id).subscribe(p => {
       this.selectedProject = p[0];
-      console.log(this.selectedProject);
     })
   }
 
