@@ -15,11 +15,11 @@
                                 <mat-radio-button value="email">Email</mat-radio-button>
                             </mat-radio-group>
                             <mat-form-field appearance="outline">
-                                <mat-label>Username</mat-label>
+                                <mat-label>{{emailSignIn.controls['signInOption'].value}}</mat-label>
                                 <input type="text" matInput [placeholder]="emailSignIn.controls['signInOption'].value" formControlName="uid">
                             </mat-form-field>
                             <mat-form-field appearance="outline">
-                                <mat-label>Password</mat-label>
+                                <mat-label>password</mat-label>
                                 <input [type]="hide ? 'password' : 'text'" matInput placeholder="password" formControlName="password">
                                 <button mat-icon-button matSuffix type="button" (click)="hide = !hide">
                                     <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
@@ -39,15 +39,15 @@
                     <div class="tab">
                         <form [formGroup]="emailSignUp" class="form" (ngSubmit)="register()">
                             <mat-form-field appearance="outline">
-                                <mat-label>Username</mat-label>
+                                <mat-label>username</mat-label>
                                 <input type="text" matInput placeholder="username" formControlName="username">
                             </mat-form-field>
                             <mat-form-field appearance="outline">
-                                <mat-label>Email</mat-label>
+                                <mat-label>email</mat-label>
                                 <input type="email" matInput placeholder="example@domain.com" formControlName="email">
                             </mat-form-field>
                             <mat-form-field appearance="outline">
-                                <mat-label>Password</mat-label>
+                                <mat-label>password</mat-label>
                                 <input [type]="rPwdHide ? 'password' : 'text'" matInput placeholder="password" formControlName="password">
                                 <button mat-icon-button matSuffix type="button" (click)="rPwdHide = !rPwdHide">
                                     <mat-icon>{{rPwdHide ? 'visibility_off' : 'visibility'}}</mat-icon>
@@ -56,7 +56,7 @@
                                 </mat-error>
                             </mat-form-field>
                             <mat-form-field appearance="outline">
-                                <mat-label>Confirm Password</mat-label>
+                                <mat-label>confirm password</mat-label>
                                 <input [type]="rConfirmPwdHide ? 'password' : 'text'" matInput placeholder="confirm password" formControlName="confirmPassword" [errorStateMatcher]="errorStateMatcher">
                                 <button mat-icon-button matSuffix type="button" (click)="rConfirmPwdHide = !rConfirmPwdHide">
                                     <mat-icon>{{rConfirmPwdHide ? 'visibility_off' : 'visibility'}}</mat-icon>
