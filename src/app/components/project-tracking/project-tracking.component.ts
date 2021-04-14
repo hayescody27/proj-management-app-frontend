@@ -1,8 +1,8 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { ProjectService } from 'src/app/services/project-service.service';
 
@@ -22,10 +22,10 @@ export class ProjectTrackingComponent implements OnInit {
   @ViewChild('containerRef')
   containerRef: ElementRef<HTMLDivElement>;
 
-  projectSelectForm: FormGroup;
-  detailSelect: FormControl = new FormControl(false);
+  requirement: FormControl = new FormControl('', Validators.required);
+  detailSelect: boolean = false;
 
-  selectedProject: any = {};
+  project: any = {};
   selectedRequirement: any = {};
 
   pieData: any[] = [];
@@ -45,7 +45,7 @@ export class ProjectTrackingComponent implements OnInit {
     domain: ['#e38800', '#00e3d4', '#323ca8', '#4ac754', '#673ab7']
   };
 
-  constructor(private fb: FormBuilder, private projSvc: ProjectService, private bpo: BreakpointObserver, private route: ActivatedRoute) {
+  constructor(private fb: FormBuilder, private projSvc: ProjectService, private bpo: BreakpointObserver, private route: ActivatedRoute, private router: Router) {
 
   }
 
@@ -54,11 +54,8 @@ export class ProjectTrackingComponent implements OnInit {
       this.getProject(p['id']);
     })
 
-    this.projectSelectForm = this.fb.group({
-      requirement: ['', Validators.required]
-    });
 
-    this.projectSelectForm.controls['requirement'].valueChanges.subscribe(r => {
+    this.requirement.valueChanges.subscribe(r => {
       this.pieData = this.transform(JSON.parse(r).phases);
       this.selectedRequirement = JSON.parse(r);
     });
@@ -81,8 +78,12 @@ export class ProjectTrackingComponent implements OnInit {
 
   getProject(id) {
     this.projSvc.getProjectById(id).subscribe(p => {
-      this.selectedProject = p[0];
+      this.project = p[0];
     })
+  }
+
+  viewProject() {
+    this.router.navigate(['/project-overview'], { queryParams: { id: this.project._id } });
   }
 
   stringify(o) {

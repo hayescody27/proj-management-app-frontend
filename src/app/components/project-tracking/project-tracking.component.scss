@@ -23,6 +23,7 @@
 .requirementDetailFields {
     display: flex; 
     flex-flow: column wrap;
+    align-items: center;
 }
 
 .charts {
@@ -53,6 +54,10 @@ textarea.mat-input-element {
         max-width: calc(95vw);
         padding: 0px 2%;
         overflow-x: hidden;
+    }
+
+    .content {
+        gap: 1em;
     }
 
     .requirementDetails {

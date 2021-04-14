@@ -8,7 +8,7 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { EventEmitter } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { debounceTime, map, shareReplay } from 'rxjs/operators';
@@ -53,16 +53,23 @@ export class ProjectOverviewComponent implements OnInit {
   reqDataSource = new MatTableDataSource<Requirement>();
 
   constructor(public dialog: MatDialog, public http: HttpClient, private projectSvc: ProjectService, public userSvc: UserService, private fb: FormBuilder, private router: Router,
-    private snackBar: MatSnackBar, private bpo: BreakpointObserver) { }
+    private snackBar: MatSnackBar, private bpo: BreakpointObserver, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.project = this.projectSvc.projectOverviewPlaceholder;
-    this.projectSvc.projectOverviewPlaceholder = null;
+
+    this.route.queryParams.subscribe(p => {
+      this.getProject(p['id']);
+    });
+
+    this.projectDetails = this.fb.group({
+      projectName: [''],
+      projectDescription: [''],
+      projectOwner: ['']
+    });
 
     this.addMemberCtrl.valueChanges.pipe(debounceTime(500)).subscribe(x => {
       this.getFilteredUserList();
     });
-    this.setProject();
 
     this.isHandset$.subscribe(x => {
       if (x) {
@@ -92,11 +99,18 @@ export class ProjectOverviewComponent implements OnInit {
     });
   }
 
-  setProject() {
-    this.projectDetails = this.fb.group({
-      projectName: [this.project.name],
-      projectDescription: [this.project.description],
-      projectOwner: [this.findProjectOwner()]
+  getProject(id) {
+    this.projectSvc.getProjectById(id).subscribe(p => {
+      this.setProject(p[0]);
+    });
+  }
+
+  setProject(project) {
+    this.project = project;
+    this.projectDetails.setValue({
+      projectName: this.project.name,
+      projectDescription: this.project.description,
+      projectOwner: this.findProjectOwner()
     });
     this.riskDataSource.data = this.project.risks;
     this.reqDataSource.data = this.project.requirements;
@@ -142,8 +156,7 @@ export class ProjectOverviewComponent implements OnInit {
       panelClass: ['red-snackbar']
     });
     this.projectSvc.getProjectById(this.project._id).subscribe(x => {
-      this.project = x[0];
-      this.setProject();
+      this.setProject(x[0]);
     }, () => {
       this.unknownError();
     })
@@ -388,6 +401,10 @@ export class ProjectOverviewComponent implements OnInit {
         this.updateProject();
       }
     })
+  }
+
+  monitorProject() {
+    this.router.navigate(['/project-tracking'], { queryParams: { id: this.project._id } });
   }
 
   trackTime(requirement) {

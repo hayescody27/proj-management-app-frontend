@@ -114,8 +114,14 @@
                                 Project Requirements
                             </div>
                             <span class="spacer"></span>
+                            <button mat-raised-button color="primary" (click)="monitorProject()" style="margin-right: 5px;" *ngIf="!(isHandset$ | async)">
+                                <i class="material-icons material-icons-round">bar_chart</i> Monitor
+                            </button>
                             <button mat-raised-button (click)="addRequirement()" *ngIf="!(isHandset$ | async)" color="primary">
                                 <mat-icon>add</mat-icon> Add Requirement
+                            </button>
+                            <button mat-mini-fab color="primary" (click)="monitorProject()" style="margin-right: 5px;" *ngIf="(isHandset$ | async)">
+                                <i class="material-icons material-icons-round">bar_chart</i>
                             </button>
                             <button mat-mini-fab color="primary" (click)="addRequirement()" *ngIf="(isHandset$ | async)">
                                 <mat-icon>add</mat-icon>

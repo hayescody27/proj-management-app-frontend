@@ -17,7 +17,6 @@ import { ConfirmModalComponent } from '../confirm-modal/confirm-modal.component'
 export class MyProjectsComponent implements OnInit {
 
   projects: Project[] = [];
-  selectedProject: Project;
 
   constructor(public projectSvc: ProjectService, private dialog: MatDialog, private snackBar: MatSnackBar, private router: Router) {
 
@@ -34,7 +33,7 @@ export class MyProjectsComponent implements OnInit {
   }
 
   viewProject(project) {
-    this.projectSvc.openProject(project);
+    this.router.navigate(['/project-overview'], { queryParams: { id: project._id } });
   }
 
   monitorProject(project) {
