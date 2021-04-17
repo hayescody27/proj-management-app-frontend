@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { Project } from 'src/app/entities/project';
 import { ProjectService } from 'src/app/services/project-service.service';
 
@@ -13,7 +14,7 @@ export class NewProjectComponent implements OnInit {
 
   newProjectForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private projSvc: ProjectService, private snackBar: MatSnackBar) { }
+  constructor(private fb: FormBuilder, private projSvc: ProjectService, private snackBar: MatSnackBar, private router: Router) { }
 
   ngOnInit(): void {
     this.newProjectForm = this.fb.group({
@@ -25,7 +26,7 @@ export class NewProjectComponent implements OnInit {
   createProject() {
     this.projSvc.createProject(this.newProjectForm.value).subscribe((x: Project) => {
 
-      this.projSvc.openProject(x);
+      this.router.navigate(['/project-overview'], { queryParams: { id: x._id } });
 
     }, err => {
       let msg = '';

@@ -10,8 +10,7 @@ import { Project } from '../entities/project';
 })
 export class ProjectService {
 
-  baseUrl: string = 'https://sudonimus.com/projects'
-  projectOverviewPlaceholder: Project = <Project>{};
+  baseUrl: string = 'https://sudonimus.com/projects';
 
   constructor(private router: Router, private http: HttpClient) { }
 
@@ -21,11 +20,6 @@ export class ProjectService {
 
   deleteProject(id) {
     return this.http.delete(`${this.baseUrl}/${id}`);
-  }
-
-  openProject(project: Project) {
-    this.projectOverviewPlaceholder = project;
-    this.router.navigate(['/project-overview']);
   }
 
   updateProject(project: Project): Observable<any> {
